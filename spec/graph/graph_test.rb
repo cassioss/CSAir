@@ -49,4 +49,12 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(Graph.distance_between('LIM','LAX'), INFTY)
   end
 
+  # Tests the correct reading of the JSON hash using
+  # a method that receives two airport names in no specific order.
+  #
+  # Fourth case: one of the airports does not exist in the JSON file.
+  def test_read_unexistent_port
+    assert_equal(Graph.distance_between('LIM','ABC'), -1)
+  end
+
 end
