@@ -5,19 +5,6 @@ class GraphTest < Test::Unit::TestCase
 
   INFTY = 1.0/0.0
 
-  # Called before every test method runs. Can be used
-  # to set up fixture information.
-  def setup
-    # Do nothing
-  end
-
-  # Called after every test method runs. Can be used to tear
-  # down fixture information.
-
-  def teardown
-    # Do nothing
-  end
-
   # Tests the correct creation of a hash from the JSON
   # source file.
   def test_hash_from_json
@@ -53,7 +40,7 @@ class GraphTest < Test::Unit::TestCase
   # a method that receives two airport names in no specific order.
   #
   # Fourth case: one of the airports does not exist in the JSON file.
-  def test_read_unexistent_port
+  def test_read_non_existent_port
     assert_equal(Graph.distance_between('LIM','ABC'), -1)
   end
 
