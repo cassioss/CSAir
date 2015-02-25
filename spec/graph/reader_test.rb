@@ -1,0 +1,47 @@
+require_relative '../../lib/graph/reader'
+require 'test/unit'
+
+class ReaderTest < Test::Unit::TestCase
+
+  INFTY = 1.0/0.0
+
+  # Tests the correct creation of a hash from the JSON
+  # source file.
+  def test_hash_from_json
+    intended_json_hash = Reader.json_file_hash
+    assert_equal(intended_json_hash['routes'][0]['distance'], 2453)
+  end
+
+  # Tests the correct reading of the JSON hash using
+  # a method that receives two airport names in no specific order.
+  #
+  # First case: the airports are connected.
+  def test_read_valid_port_distance
+    assert_equal(Reader.distance_between('LIM','SCL'), 2453)
+  end
+
+  # Tests the correct reading of the JSON hash using
+  # a method that receives two airport names in no specific order.
+  #
+  # Second case: the airports are the same.
+  def test_read_same_port_distance
+    assert_equal(Reader.distance_between('LIM','LIM'), 0)
+  end
+
+  # Tests the correct reading of the JSON hash using
+  # a method that receives two airport names in no specific order.
+  #
+  # Third case: the airports exist but are not connected.
+  def test_read_disconnected_ports
+    assert_equal(Reader.distance_between('LIM','LAX'), INFTY)
+  end
+
+  # Tests the correct reading of the JSON hash using
+  # a method that receives two airport names in no specific order.
+  #
+  # Fourth case: one of the airports does not exist in the JSON file.
+  def test_read_non_existent_port
+    assert_equal(Reader.distance_between('LIM','ABC'), -1)
+  end
+
+end
