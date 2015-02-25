@@ -10,22 +10,23 @@ module Graph
     return json_parsed_hash
   end
 
-  puts(json_file_hash['routes'][0]['ports'])
+#  puts(json_file_hash['routes'][0]['ports'])
 
+  # @param [String] first_airport
+  # @param [String] second_airport
   def self.distance_between(first_airport, second_airport)
-    dist_value = 1.0/0.0
-    json_file_hash['routes'].each do |route|
-      puts route
+    if first_airport == second_airport
+      return 0
+    else
+      dist_value = 1.0/0.0
+      json_file_hash['routes'].each do |route|
+        if route['ports'].include? first_airport and route['ports'].include? second_airport
+          dist_value = route['distance']
+        end
+      end
+      return dist_value
     end
-=begin
-    (first_airport.equal? second_airport) ?
-        dist_value = 0 :
-        json_file_hash['routes'].each  { |route| if route }
-
-    return dist_value
-    end
-=end
   end
 
-  distance_between('a','b')
+  puts distance_between('LIM','LIM')
 end

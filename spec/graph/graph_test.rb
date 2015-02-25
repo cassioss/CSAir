@@ -3,6 +3,8 @@ require 'test/unit'
 
 class GraphTest < Test::Unit::TestCase
 
+  INFTY = 1.0/0.0
+
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
@@ -24,12 +26,27 @@ class GraphTest < Test::Unit::TestCase
   end
 
   # Tests the correct reading of the JSON hash using
-  # a method that receives airport names in no specific order.
+  # a method that receives two airport names in no specific order.
   #
   # First case: the airports are connected.
-  def test_read_valid_airport_distance
+  def test_read_valid_port_distance
     assert_equal(Graph.distance_between('LIM','SCL'), 2453)
   end
 
+  # Tests the correct reading of the JSON hash using
+  # a method that receives two airport names in no specific order.
+  #
+  # Second case: the airports are the same.
+  def test_read_same_port_distance
+    assert_equal(Graph.distance_between('LIM','LIM'), 0)
+  end
+
+  # Tests the correct reading of the JSON hash using
+  # a method that receives two airport names in no specific order.
+  #
+  # Third case: the airports exist but are not connected.
+  def test_read_disconnected_ports
+    assert_equal(Graph.distance_between('LIM','LAX'), INFTY)
+  end
 
 end
