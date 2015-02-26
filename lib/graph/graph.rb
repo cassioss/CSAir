@@ -70,6 +70,7 @@ class Graph
     @node_hash[port_name] = Hash.new(INFTY)
   end
 
+# Creates the graph using the provided JSON file.
   def create_graph_from_json
     read_me = Reader.new
     graph_hash = read_me.get_graph_hash
@@ -78,6 +79,7 @@ class Graph
     end
   end
 
+# Gets the URL addition for the JSON graph.
   def get_url_addition
     url_add = ''
     read_me = Reader.new
@@ -88,6 +90,7 @@ class Graph
   end
 
   private
+
 # Checks if at least one of the nodes does not exist in the graph.
 #
 # @param [String] first_port
@@ -107,6 +110,7 @@ class Graph
 
 end
 
+# Quick demo
 a = Graph.new
 a.create_graph_from_json
 p a
