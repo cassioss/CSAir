@@ -14,7 +14,7 @@ class GraphTest < Test::Unit::TestCase
   end
 
   # Tests getting the connection of an airport that does not exist.
-  def test_get_non_existing_port
+  def test_get_non_existing_airport
     simple_graph = Graph.new
     simple_graph.add_connection('MEX', 'CHI', 3141)
     assert_equal(simple_graph.get_connection('MEX', 'ABC'), -1)
@@ -22,12 +22,11 @@ class GraphTest < Test::Unit::TestCase
   end
 
   # Tests getting the connection of two existing but disconnected airports.
-  def test_get_non_existing_port
+  def test_get_disconnected_airports
     simple_graph = Graph.new
-    simple_graph.add_connection('MEX', 'CHI', 3141)
-    assert_equal(simple_graph.get_connection('MEX', 'ABC'), -1)
-    assert_equal(simple_graph.get_connection('ABC', 'MEX'), -1)
+    simple_graph.add_node('MEX')
+    simple_graph.add_node('CHI')
+    assert_equal(simple_graph.get_connection('MEX', 'CHI'), INFTY)
   end
-
 
 end
