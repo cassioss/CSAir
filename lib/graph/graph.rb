@@ -5,6 +5,33 @@ class Graph
     @node_hash = Hash.new
   end
 
+  def to_s
+    graph_string = ''
+    add_comma1 = false
+    @node_hash.each do |node, node_hash|
+      add_comma2 = false
+      if add_comma1
+        graph_string << ' || '
+      else
+        add_comma1 = true
+      end
+      graph_string << "{#{node}"
+      unless node_hash.empty?
+        graph_string << ' =>'
+        node_hash.each do |port, dist|
+          if add_comma2
+            graph_string << ', '
+          else
+            add_comma2 = true
+          end
+          graph_string << " {#{port}: #{dist}}"
+        end
+      end
+      graph_string << '}'
+    end
+    graph_string
+  end
+
   # Adds a connection between two nodes in the graph, creating them if necessary.
   #
   # @param [String] first_port
@@ -23,10 +50,10 @@ class Graph
   # @param [String] second_port
   # @return [Integer]
   def get_connection(first_port, second_port)
-    if one_does_not_exist(first_port, second_port)
-      -1
-    else
-      @node_hash[first_port][second_port]
+    case
+      when one_does_not_exist(first_port, second_port) then -1
+      when first_port == second_port then 0
+      else @node_hash[first_port][second_port]
     end
   end
 

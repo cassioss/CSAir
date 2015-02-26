@@ -9,6 +9,7 @@ class GraphTest < Test::Unit::TestCase
   def test_add_connection
     simple_graph = Graph.new
     simple_graph.add_connection('MEX', 'CHI', 2131)
+    simple_graph.add_connection('MEX', 'SCL', 2123)
     assert_equal(simple_graph.get_connection('MEX', 'CHI'), 2131)
     assert_equal(simple_graph.get_connection('CHI', 'MEX'), 2131)
   end
@@ -27,6 +28,14 @@ class GraphTest < Test::Unit::TestCase
     simple_graph.add_node('MEX')
     simple_graph.add_node('CHI')
     assert_equal(simple_graph.get_connection('MEX', 'CHI'), INFTY)
+    assert_equal(simple_graph.get_connection('CHI', 'MEX'), INFTY)
+  end
+
+  # Tests getting the connection between an airport and itself.
+  def test_get_same_airport
+    simple_graph = Graph.new
+    simple_graph.add_node('MEX')
+    assert_equal(simple_graph.get_connection('MEX', 'MEX'), 0)
   end
 
 end
