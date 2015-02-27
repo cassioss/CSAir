@@ -12,7 +12,37 @@ class Metro
     @region = region
   end
 
-# Returns an airport timezone.
+# Gets the code of the airport.
+#
+# @return [String]
+  def get_code
+    @code
+  end
+
+# Gets the city name of the airport.
+# 
+# @return [String]
+  def get_name
+    @name
+  end
+
+# Gets the country of the airport.
+#
+# @return [String]
+  def get_country
+    @country
+  end
+
+# Gets the continent of the airport.
+#
+# @return [String]
+  def get_continent
+    @continent
+  end
+
+# Gets the airport timezone, having GMT as reference.
+#
+# @return [String]
   def get_timezone
     if @timezone >= 0
       'GMT +' + @timezone.to_s
@@ -21,7 +51,9 @@ class Metro
     end
   end
 
-# Returns the coordinates of an airport.
+# Gets the coordinates of the airport.
+#
+# @return [String]
   def get_coordinates
     coord_output = ''
     @coordinates.each do |direction, degrees|
@@ -29,4 +61,24 @@ class Metro
     end
     coord_output[0..-3]
   end
+
+# Gets the population of the airport's city.
+#
+# @return [String]
+  def get_population
+    @population.to_s
+  end
+
+# Gets the region of the airport.
+#
+# @return [String]
+  def get_region
+    case @code
+      when 1 then 'Americas'
+      when 2 then 'Africa'
+      when 3 then 'Europe'
+      else        'Asia and Oceania'
+    end
+  end
+
 end
