@@ -20,7 +20,7 @@ class Metro
   end
 
 # Gets the city name of the airport.
-# 
+#
 # @return [String]
   def get_name
     @name

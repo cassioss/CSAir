@@ -34,7 +34,6 @@ class Graph
     graph_string
   end
 
-
 # Adds a connection between two nodes in the graph, creating them if necessary.
 #
 # @param [String] first_port

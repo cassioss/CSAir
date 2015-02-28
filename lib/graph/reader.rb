@@ -51,17 +51,6 @@ class Reader
     end
   end
 
-  # @param [Integer] num
-  # @return [String]
-  def get_region_from_number(num)
-    case num
-      when 1 then 'Americas'
-      when 2 then 'Africa'
-      when 3 then 'Europe'
-      else 'Asia and Oceania'
-    end
-  end
-
   # @param [String] code
   # @return [String]
   def get_closest_cities_to(code)
