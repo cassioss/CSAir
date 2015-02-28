@@ -1,6 +1,7 @@
 require_relative 'query'
 require 'launchy'
 
+# Class created for the command line UI. The main module that runs it is in lib/csair.rb
 class CmdInterface
 
   def initialize
