@@ -3,6 +3,8 @@ require_relative 'connection'
 
 class Graph
 
+  attr_reader :node_hash
+
   INFTY = 1.0/0.0
 
   def initialize
@@ -55,6 +57,17 @@ class Graph
     @node_hash[port_name] = Hash.new(INFTY)
   end
 
+# Gets the URL addition for the JSON graph.
+  def get_url_addition
+    @connectors.get_connection_url
+  end
+
+  def get_closest_cities(city_code)
+    @node_hash[city_code]
+  end
+
+  private
+
 # Creates the graph using the provided JSON file.
   def create_graph_from_json
     read_me = Reader.new
@@ -64,12 +77,6 @@ class Graph
     end
   end
 
-# Gets the URL addition for the JSON graph.
-  def get_url_addition
-    @connectors.get_connection_url
-  end
-
-  private
 
 # @param [String] node
 # @param [Hash] node_hash

@@ -6,14 +6,20 @@ class Dictionary
   attr_reader :metros
 
   def initialize
-    @dict = Hash.new
+    @dict_name_key = Hash.new
+    @dict_key_name = Hash.new
     @metros = Hash.new
     get_metros_from_json
   end
 
 # @param [String] name
-  def encrypt(name)
-    @dict[name.downcase]
+  def encode(name)
+    @dict_name_key[name.downcase]
+  end
+
+# @param [String] key
+  def unlock(key)
+    @dict_key_name[key]
   end
 
 # @param [String] name
@@ -33,15 +39,16 @@ class Dictionary
 
 # @param [Hash] airport
   def add_metro(airport)
-    @dict.add_translation(airport[name], airport[code])
-    @metros[airport[code]] = Metro.new(airport['name'], airport['country'], airport['continent'], airport['timezone'],
+    add_translation(airport['name'], airport['code'])
+    @metros[airport['code']] = Metro.new(airport['name'], airport['country'], airport['continent'], airport['timezone'],
                                        airport['population'], airport['coordinates'], airport['region'])
   end
 
 # @param [String] name
 # @param [String] code
   def add_translation(name, code)
-    @dict[name.downcase] = code
+    @dict_name_key[name.downcase] = code
+    @dict_key_name[code] = name
   end
 
 end
