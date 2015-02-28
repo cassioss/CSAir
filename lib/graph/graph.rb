@@ -1,4 +1,5 @@
 require_relative '../../lib/graph/reader'
+require_relative '../../lib/graph/connection'
 
 class Graph
   INFTY = 1.0/0.0
@@ -8,30 +9,25 @@ class Graph
   end
 
   def to_s
-    graph_string = ''
-    add_comma1 = false
+    graph_string = '{Graph}'
     @node_hash.each do |node, node_hash|
-      add_comma2 = false
-      if add_comma1
-        graph_string << "\n"
-      else
-        add_comma1 = true
-      end
-      graph_string << "{#{node}"
+      graph_string << "\n{#{node}"
       unless node_hash.empty?
-        graph_string << ' =>'
-        node_hash.each do |port, dist|
-          if add_comma2
-            graph_string << ', '
-          else
-            add_comma2 = true
-          end
-          graph_string << "{#{port}: #{dist}}"
-        end
+        graph_string << add_to_string(node_hash)
       end
       graph_string << '}'
     end
     graph_string
+  end
+
+  # @param [Hash]
+  # @return [String]
+  def add_to_string(node_hash)
+    nodes_and_dist = ' => '
+    node_hash.each do |port, dist|
+      nodes_and_dist << "{#{port}: #{dist}}, "
+    end
+    nodes_and_dist[0..-3]
   end
 
 # Adds a connection between two nodes in the graph, creating them if necessary.
@@ -81,6 +77,14 @@ class Graph
 # Gets the URL addition for the JSON graph.
   def get_url_addition
     url_add = ''
+    @node_hash.each do |node, node_hash|
+      node_hash.each do |dest_node, distance|
+        connector = Connection.new(node, dest_node, distance)
+
+      end
+    end
+
+    url_add = ''
     read_me = Reader.new
     read_me.get_graph_hash.each do |route|
       url_add << route['ports'][0] << '-' << route['ports'][1] << ',+'
@@ -108,8 +112,3 @@ class Graph
   end
 
 end
-
-# Quick demo
-a = Graph.new
-a.create_graph_from_json
-p a
