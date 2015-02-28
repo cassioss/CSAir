@@ -1,7 +1,7 @@
-require_relative '../../lib/graph/graph'
+require_relative '../../lib/csair_lib/graph'
 require 'test/unit'
 
-class GraphTest < Test::Unit::TestCase
+class TestGraph < Test::Unit::TestCase
 
   INFTY = 1.0/0.0
 

@@ -1,6 +1,4 @@
-# coding: utf-8
 require 'json'
-
 
 class Reader
 
@@ -22,7 +20,7 @@ class Reader
 
   private
 
-  # Reads a specific JSON file to obtain the graph data.
+  # Reads a specific JSON file to obtain CSAir data.
   def data_hash_from_json
     my_path = File.dirname(__FILE__)
     path_to_json = File.join(my_path, '..', '..', 'resources', 'map_data.json')
