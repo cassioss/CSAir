@@ -2,10 +2,9 @@
 
 class Metro
 
-  attr_reader :code, :name, :country, :continent
+  attr_reader :name, :country, :continent
 
-  def initialize(code, name, country, continent, timezone, population, coordinates, region)
-    @code = code
+  def initialize(name, country, continent, timezone, population, coordinates, region)
     @name = name
     @country = country
     @continent = continent

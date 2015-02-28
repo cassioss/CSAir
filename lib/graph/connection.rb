@@ -12,6 +12,15 @@ class Connection
     end
   end
 
+  # @return [String]
+  def get_connection_url
+    url_string = String.new
+    @connection_hash.each do |connection|
+      url_string << connection + ',+'
+    end
+    url_string[0..-3]
+  end
+
   private
 
   # @param [String] two
@@ -28,12 +37,4 @@ class Connection
     first.downcase < second.downcase ? dash_between_uppercase(first, second) : dash_between_uppercase(second, first)
   end
 
-  # @return [String]
-  def get_connection_url
-    url_string = String.new
-    @connection_hash.each do |connection|
-      url_string << connection + ',+'
-    end
-    url_string[0..-3]
-  end
 end
