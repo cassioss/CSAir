@@ -1,14 +1,13 @@
-require_relative '../../lib/graph/reader'
-require_relative '../../lib/graph/connection'
-require_relative '../../lib/graph/metro'
+require_relative 'reader'
+require_relative 'connection'
 
 class Graph
+
   INFTY = 1.0/0.0
 
   def initialize
-    @connectors = Connection.new
     @node_hash = Hash.new
-    @read_me = Reader.new
+    @connectors = Connection.new
     create_graph_from_json
   end
 
@@ -40,12 +39,12 @@ class Graph
 # @return [Integer]
   def get_connection(first_port, second_port)
     case
-    when one_does_not_exist(first_port, second_port) then
-      -1
-    when first_port == second_port then
-      0
-    else
-      @node_hash[first_port][second_port]
+      when one_does_not_exist(first_port, second_port) then
+        -1
+      when first_port == second_port then
+        0
+      else
+        @node_hash[first_port][second_port]
     end
   end
 
@@ -58,17 +57,10 @@ class Graph
 
 # Creates the graph using the provided JSON file.
   def create_graph_from_json
-    graph_hash = @read_me.get_graph_hash
+    read_me = Reader.new
+    graph_hash = read_me.get_graph_hash
     graph_hash.each do |route|
       add_connection(route['ports'][0], route['ports'][1], route['distance'])
-    end
-  end
-
-# Creates the Metro data using the provided JSON file.
-  def get_metros_from_json
-    metro_hash = @read_me.get_metro_hash
-    metro_hash.each do |airport|
-      add_metro(airport)
     end
   end
 
@@ -79,15 +71,9 @@ class Graph
 
   private
 
-  def add_metro(airport)
-    @node_hash[airport[code]]['metro'] = Metro.new(airport['name'], airport['country'],
-                                                   airport['continent'], airport['timezone'], airport['population'],
-                                                   airport['coordinates'], airport['region'])
-  end
-
-  # @param [String] node
-  # @param [Hash] node_hash
-  # @return [String]
+# @param [String] node
+# @param [Hash] node_hash
+# @return [String]
   def get_node_connections(node, node_hash)
     node_string = "\n{#{node}"
     unless node_hash.empty?

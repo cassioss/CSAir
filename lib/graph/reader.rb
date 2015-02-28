@@ -4,8 +4,6 @@ require 'json'
 
 class Reader
 
-  INFTY = 1.0/0.0
-
   def initialize
     @json_data_hash = data_hash_from_json
   end
@@ -16,6 +14,10 @@ class Reader
 
   def get_metro_hash
     @json_data_hash['metros']
+  end
+
+  def get_data_sources
+    @json_data_hash['data sources']
   end
 
   private
