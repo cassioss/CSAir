@@ -1,7 +1,11 @@
 require_relative 'query'
 require 'launchy'
 
-# Class created for the command line UI. The main module that runs it is in lib/csair.rb
+# Class created for the command line User Interface (UI). The main module that runs it is in lib/csair.rb
+#
+# Author:: Cassio dos Santos Sousa
+# Version:: 1.0
+#
 class CmdInterface
 
   def initialize
@@ -19,7 +23,8 @@ class CmdInterface
         when '2' then get_city
         when '3' then show_statistics
         when '4' then show_url
-        else break
+        else
+          break
       end
     end
   end

@@ -19,8 +19,14 @@ class Query
     end
   end
 
-  # @param [String] city
-  # @param [String] num
+  # Gets an specific information about a city according to the option entered by a user. Aside from airport code
+  # (obtained from a Dictionary object) and the closest cities (obtained from a Graph object), the options return an
+  # information from a Metro object related to the city.
+  #
+  # @param [String] city The city name.
+  #
+  # @param [String] num The option number, treated as a String.
+  #
   def get_information_from(city, num)
     code = @dict.encode(city)
     case num
@@ -35,18 +41,26 @@ class Query
     end
   end
 
-  # @param [String] city_code
+  # Given an airport code, returns a string that contains the city name followed be city code in parenthesis, a
+  # common format used to associate cities to airports in search engines.
+  #
+  # @param [String] port_code An airport code.
+  #
+  # @return [String] The corresponding city name followed by the airport code in parenthesis.
+  #
+  def city_plus_code(port_code)
+    @dict.unlock(port_code) + ' (' + port_code + ')'
+  end
+
+  # Prints all airports that are connected to a city by one CSAir flight.
+  #
+  # @param [String] city_code The airport code.
+  #
   def get_closest_cities_to(city_code)
     @json_graph.get_closest_cities(city_code).each do |port_code, distance|
       print "\n#{city_plus_code(port_code)} - #{distance.to_s} miles"
     end
     print "\n"
-  end
-
-  # @param [String] port_code
-  # @return [String]
-  def city_plus_code(port_code)
-    @dict.unlock(port_code) + ' (' + port_code + ')'
   end
 
   def get_longest_flight
@@ -63,7 +77,7 @@ class Query
       end
     end
     puts 'Longest flight: ' + city_plus_code(port_1) + ' - ' + city_plus_code(port_2) + ': ' + ref_distance.to_s +
-         ' miles'
+             ' miles'
   end
 
   def get_shortest_flight
@@ -80,7 +94,7 @@ class Query
       end
     end
     puts 'Shortest flight: ' + city_plus_code(port_1) + ' - ' + city_plus_code(port_2) + ': ' + ref_distance.to_s +
-         ' miles'
+             ' miles'
   end
 
   def get_average_distance
