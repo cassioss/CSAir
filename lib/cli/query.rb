@@ -2,6 +2,11 @@ require_relative '../../lib/csair_lib/graph'
 require_relative '../../lib/csair_lib/dictionary'
 require_relative '../../lib/csair_lib/metro'
 
+# Class that aggregates all possible queries the user might want to make.
+#
+# Author:: Cassio dos Santos Sousa
+# Version:: 1.0
+#
 class Query
 
   def initialize
@@ -9,9 +14,14 @@ class Query
     @dict = Dictionary.new
   end
 
+#
+# Prints all the cities in the CSAir network.
+#
+# @return [void]
+#
   def list_all_cities
     alpha_order = SortedSet.new
-    @dict.metros.each do |key, airport|
+    @dict.metros.values.each do |airport|
       alpha_order.add(airport.name)
     end
     alpha_order.each do |name|
@@ -19,14 +29,16 @@ class Query
     end
   end
 
-  # Gets an specific information about a city according to the option entered by a user. Aside from airport code
-  # (obtained from a Dictionary object) and the closest cities (obtained from a Graph object), the options return an
-  # information from a Metro object related to the city.
-  #
-  # @param [String] city The city name.
-  #
-  # @param [String] num The option number, treated as a String.
-  #
+# Gets an specific information about a city according to the option entered by a user. Aside from airport code
+# (obtained from a Dictionary object) and the closest cities (obtained from a Graph object), the options return an
+# information from a Metro object related to the city.
+#
+# @param [String] city The city name.
+#
+# @param [String] num The option number, treated as a String.
+#
+# @return [void]
+#
   def get_information_from(city, num)
     code = @dict.encode(city)
     case num
@@ -41,21 +53,23 @@ class Query
     end
   end
 
-  # Given an airport code, returns a string that contains the city name followed be city code in parenthesis, a
-  # common format used to associate cities to airports in search engines.
-  #
-  # @param [String] port_code An airport code.
-  #
-  # @return [String] The corresponding city name followed by the airport code in parenthesis.
-  #
+# Given an airport code, returns a string that contains the city name followed be city code in parenthesis, a
+# common format used to associate cities to airports in search engines.
+#
+# @param [String] port_code An airport code.
+#
+# @return [String] The corresponding city name followed by the airport code in parenthesis.
+#
   def city_plus_code(port_code)
     @dict.unlock(port_code) + ' (' + port_code + ')'
   end
 
-  # Prints all airports that are connected to a city by one CSAir flight.
-  #
-  # @param [String] city_code The airport code.
-  #
+# Prints all airports that are connected to a city by one CSAir flight.
+#
+# @param [String] city_code The airport code.
+#
+# @return [void]
+#
   def get_closest_cities_to(city_code)
     @json_graph.get_closest_cities(city_code).each do |port_code, distance|
       print "\n#{city_plus_code(port_code)} - #{distance.to_s} miles"
@@ -63,6 +77,10 @@ class Query
     print "\n"
   end
 
+# Gets the longest flight of the network, in miles.
+#
+# @return [void]
+#
   def get_longest_flight
     port_1 = String.new
     port_2 = String.new
@@ -80,6 +98,10 @@ class Query
              ' miles'
   end
 
+# Gets the shortest flight of the network, in miles.
+#
+# @return [void]
+#
   def get_shortest_flight
     port_1 = String.new
     port_2 = String.new

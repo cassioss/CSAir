@@ -12,6 +12,9 @@ class CmdInterface
     @queries = Query.new
   end
 
+#
+#
+# #
   def basic_for_loop
     loop do
       main_menu
@@ -19,10 +22,14 @@ class CmdInterface
       $stdin.flush
       character = gets.chomp
       case character
-        when '1' then list_all_cities
-        when '2' then get_city
-        when '3' then show_statistics
-        when '4' then show_url
+        when '1' then
+          list_all_cities
+        when '2' then
+          get_city
+        when '3' then
+          show_statistics
+        when '4' then
+          show_url
         else
           break
       end
@@ -41,6 +48,17 @@ class CmdInterface
     @queries.get_information_from(city, number)
   end
 
+# Shows CSAir statistics in the following order:
+#
+# * Longest flight on the CSAir network;
+# * Shortest flight on the CSAir network;
+# * Average flight distance on the CSAir network;
+# * Biggest city that allocates CSAir flights (in terms of population);
+# * Smallest city that allocates CSAir flights (in terms of population);
+# * Average size of cities that allocate CSAir flights (in terms of population);
+# * Continents (detailed by countries) that have CSAir flights;
+# * Hub cities (cities that have the biggest number of flights).
+#
   def show_statistics
     puts "\nCSAir statistics:\n\n"
     @queries.get_longest_flight

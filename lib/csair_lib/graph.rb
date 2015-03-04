@@ -89,7 +89,7 @@ class Graph
     node_string << '}'
   end
 
-# @param [Hash]
+# @param [Hash] node_hash
 # @return [String]
   def add_to_string(node_hash)
     nodes_and_dist = ' => '
