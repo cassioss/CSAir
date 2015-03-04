@@ -77,7 +77,7 @@ class Query
     print "\n"
   end
 
-# Gets the longest flight of the network, in miles.
+# Prints the longest flight of the network, in miles.
 #
 # @return [void]
 #
@@ -98,7 +98,7 @@ class Query
              ' miles'
   end
 
-# Gets the shortest flight of the network, in miles.
+# Prints the shortest flight of the network, in miles.
 #
 # @return [void]
 #
@@ -119,11 +119,15 @@ class Query
              ' miles'
   end
 
+# Prints the average flight distance for an CSAir flight, in miles.
+#
+# @return [void]
+#
   def get_average_distance
     flight_counter = 0
     total_distance = 0
-    @json_graph.node_hash.each do |key, connections|
-      connections.each do |port_key, distance|
+    @json_graph.node_hash.values.each do |connections|
+      connections.values.each do |distance|
         total_distance += distance
         flight_counter += 1
       end
@@ -131,6 +135,10 @@ class Query
     puts 'Average flight distance: ' + ((1.0) * total_distance / flight_counter).to_i.to_s + ' miles'
   end
 
+# Prints the biggest city that allocates CSAir flights, in terms of population.
+#
+# @return [void]
+#
   def get_biggest_city
     city_port = String.new
     ref_population = 0
@@ -143,6 +151,10 @@ class Query
     puts 'Biggest city: ' + city_plus_code(city_port) + ': ' + ref_population.to_s + ' inhabitants'
   end
 
+# Prints the smallest city that allocates CSAir flights, in terms of population.
+#
+# @return [void]
+#
   def get_smallest_city
     city_port = String.new
     ref_population = 7000000
@@ -158,7 +170,7 @@ class Query
   def get_average_city_size
     city_counter = 0
     total_population = 0
-    @dict.metros.each do |key, metro|
+    @dict.metros.values.each do |metro|
       total_population += metro.population.to_i
       city_counter += 1
     end
@@ -166,8 +178,8 @@ class Query
   end
 
   def get_continents
-    city_hash = Hash.new()
-    @dict.metros.each do |key, metro|
+    city_hash = Hash.new
+    @dict.metros.values.each do |metro|
       if city_hash[metro.continent].nil?
         city_hash[metro.continent] = SortedSet.new
       end
@@ -189,7 +201,7 @@ class Query
 
   def get_most_connections
     reference = 0
-    @json_graph.node_hash.each do |key, port_hash|
+    @json_graph.node_hash.values.each do |port_hash|
       if port_hash.size > reference
         reference = port_hash.length
       end

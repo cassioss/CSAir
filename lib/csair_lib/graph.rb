@@ -52,12 +52,19 @@ class Graph
 
 # Adds a note to the graph without connection. The distance to any other node is infinite.
 #
-# @param [String] port_name
-  def add_node(port_name)
-    @node_hash[port_name] = Hash.new(INFTY)
+# @param [String] port_code the airport code.
+#
+# @return [void]
+#
+  def add_node(port_code)
+    @node_hash[port_code] = Hash.new(INFTY)
   end
 
-# Gets the URL addition for the JSON graph.
+# Gets the URL addition for the JSON graph. The resulting string has every airport connection separated by commas and
+# using plus signs (+) for spaces. Examples: 'SCL-MEX', 'SCL-LIM,+LIM-BOG'
+#
+# @return [String] a string containing each airport connection.
+#
   def get_url_addition
     @connectors.get_connection_url
   end
@@ -69,6 +76,9 @@ class Graph
   private
 
 # Creates the graph using the provided JSON file.
+#
+# @return [void]
+#
   def create_graph_from_json
     read_me = Reader.new
     graph_hash = read_me.get_graph_hash
@@ -78,9 +88,13 @@ class Graph
   end
 
 
+#
 # @param [String] node
+#
 # @param [Hash] node_hash
+#
 # @return [String]
+#
   def get_node_connections(node, node_hash)
     node_string = "\n{#{node}"
     unless node_hash.empty?
