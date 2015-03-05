@@ -167,6 +167,10 @@ class Query
     puts 'Smallest city: ' + city_plus_code(city_port) + ': ' + ref_population.to_s + ' inhabitants'
   end
 
+# Prints the average city size for a city that allocates CSAir flight, in terms of population.
+#
+# @return [void]
+#
   def get_average_city_size
     city_counter = 0
     total_population = 0
@@ -177,6 +181,10 @@ class Query
     puts 'Average population of CSAir cities: ' + ((1.0) * total_population / city_counter).to_i.to_s + ' inhabitants'
   end
 
+# Prints the continents that have CSAir flights, along with the cities that allocate them.
+#
+# @return [void] calls print_hash(city_hash)
+#
   def get_continents
     city_hash = Hash.new
     @dict.metros.values.each do |metro|

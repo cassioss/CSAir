@@ -86,8 +86,7 @@ class Graph
       add_connection(route['ports'][0], route['ports'][1], route['distance'])
     end
   end
-
-
+  
 #
 # @param [String] node
 #
@@ -104,6 +103,7 @@ class Graph
   end
 
 # @param [Hash] node_hash
+#
 # @return [String]
   def add_to_string(node_hash)
     nodes_and_dist = ' => '
