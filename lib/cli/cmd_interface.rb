@@ -5,7 +5,7 @@ require 'launchy'
 #
 # @author Cassio dos Santos Sousa
 # @version 1.0
-# @see lib/csair/csair.rb
+# @see CSAir
 #
 class CmdInterface
 
