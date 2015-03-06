@@ -1,10 +1,11 @@
 require_relative 'query'
 require 'launchy'
 
-# Class created for the command line User Interface (UI). The main module that runs it is in lib/csair.rb
+# Class created for the command line User Interface (UI).
 #
-# Author:: Cassio dos Santos Sousa
-# Version:: 1.0
+# @author Cassio dos Santos Sousa
+# @version 1.0
+# @see lib/csair/csair.rb
 #
 class CmdInterface
 
