@@ -77,6 +77,7 @@ class Query
     print "\n"
   end
 
+
 # Prints the longest flight of the network, in miles.
 #
 # @return [void]
@@ -124,16 +125,11 @@ class Query
 # @return [void]
 #
   def get_average_distance
-    flight_counter = 0
-    total_distance = 0
-    @json_graph.node_hash.values.each do |connections|
-      connections.values.each do |distance|
-        total_distance += distance
-        flight_counter += 1
-      end
-    end
+    flight_counter = @json_graph.num_of_flights
+    total_distance = @json_graph.total_distance
     puts 'Average flight distance: ' + ((1.0) * total_distance / flight_counter).to_i.to_s + ' miles'
   end
+
 
 # Prints the biggest city that allocates CSAir flights, in terms of population.
 #

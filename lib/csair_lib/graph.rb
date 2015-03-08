@@ -8,7 +8,7 @@ require_relative 'connection'
 #
 class Graph
 
-  attr_reader :node_hash
+  attr_reader :node_hash, :total_distance, :num_of_flights, :shortest_flight, :longest_flight
 
   # Reference value for infinity.
   INFTY = 1.0/0.0
@@ -17,6 +17,10 @@ class Graph
   def initialize
     @node_hash = Hash.new
     @connectors = Connection.new
+    @total_distance = 0
+    @num_of_flights = 0
+    @shortest_flight = nil
+    @longest_flight = nil
     create_graph_from_json
   end
 
@@ -42,8 +46,32 @@ class Graph
     add_if_non_existing(first_port)
     add_if_non_existing(second_port)
     @connectors.add_connection(first_port, second_port)
-    @node_hash[first_port][second_port] = distance
-    @node_hash[second_port][first_port] = distance
+    @node_hash[first_port][second_port] = @node_hash[second_port][first_port] = distance
+    make_statistics(first_port, second_port, distance)
+  end
+
+  def make_statistics(first_port, second_port, distance)
+    distance_hash = {distance => [first_port, second_port].sort }
+    @total_distance += distance
+    @num_of_flights += 1
+    account_for_shortest_flight(distance_hash)
+    account_for_longest_flight(distance_hash)
+  end
+
+  def account_for_shortest_flight(distance_hash)
+    if @shortest_flight.nil?
+      @shortest_flight = distance_hash
+    else
+      @shortest_flight = @shortest_flight.keys[0] < distance_hash.keys[0] ? @shortest_flight : distance_hash
+    end
+  end
+
+  def account_for_longest_flight(distance_hash)
+    if @shortest_flight.nil?
+      @longest_flight = distance_hash
+    else
+      @shortest_flight = @shortest_flight.keys[0] > distance_hash.keys[0] ? @shortest_flight : distance_hash
+    end
   end
 
   # Gets the value of a connection (or route) between two nodes (or airports).
