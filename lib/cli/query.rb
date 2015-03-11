@@ -4,11 +4,16 @@ require_relative '../../lib/csair_lib/metro'
 
 # Class that aggregates all possible queries the user might want to make.
 #
-# Author:: Cassio dos Santos Sousa
-# Version:: 1.0
+# @author Cassio dos Santos Sousa
+# @version 1.0
 #
 class Query
 
+# Constructor that initializes the JSON graph and a dictionary to decode the name of a city to its airport code,
+# and vice-versa.
+#
+# @return [void]
+#
   def initialize
     @json_graph = Graph.new
     @dict = Dictionary.new
@@ -42,7 +47,8 @@ class Query
   def get_information_from(city, num)
     code = @dict.encode(city)
     case num
-      when '1' then code
+      when '1' then
+        code
       when '2' then @dict.metros[code].country
       when '3' then @dict.metros[code].continent
       when '4' then @dict.metros[code].timezone
@@ -130,7 +136,6 @@ class Query
     puts 'Average flight distance: ' + ((1.0) * total_distance / flight_counter).to_i.to_s + ' miles'
   end
 
-
 # Prints the biggest city that allocates CSAir flights, in terms of population.
 #
 # @return [void]
@@ -192,6 +197,8 @@ class Query
     print_hash(city_hash)
   end
 
+# @return [void]
+#
   def print_hash(city_hash)
     print "\nCSAir cities in each continent"
     city_hash.each do |continent, port_set|
@@ -203,6 +210,8 @@ class Query
     print "\n"
   end
 
+# @return [Integer]
+#
   def get_most_connections
     reference = 0
     @json_graph.node_hash.values.each do |port_hash|
@@ -213,6 +222,8 @@ class Query
     reference
   end
 
+# @return [void]
+#
   def get_hub_cities
     reference = get_most_connections
     print "\n\nCities with most CSAir connections (" + reference.to_s + "):\n"
@@ -223,10 +234,16 @@ class Query
     end
   end
 
+# @return [String]
+#
   def get_popup_url
     'http://www.gcmap.com/mapui?P=' + @json_graph.get_url_addition
   end
 
+# @param [String] name
+#
+# @return [String]
+#
   def get_code(name)
     @dict.encode(name)
   end
