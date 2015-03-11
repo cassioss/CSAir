@@ -8,6 +8,20 @@ require_relative 'connection'
 #
 class Graph
 
+  # @!attribute node_hash
+  #   @return [Hash]
+  #
+  # @!attribute total_distance
+  #   @return [Integer]
+  #
+  # @!attribute num_of_flights
+  #   @return [Integer]
+  #
+  # @!attribute shortest_flight
+  #   @return [Hash]
+  #
+  # @!attribute longest_flight
+  #   @return [Hash]
   attr_reader :node_hash, :total_distance, :num_of_flights, :shortest_flight, :longest_flight
 
   # Reference value for infinity.
@@ -177,6 +191,7 @@ class Graph
   # @param [Hash] node_hash
   #
   # @return [String]
+  #
   def add_to_string(node_hash)
     nodes_and_dist = ' => '
     node_hash.each do |port, dist|
@@ -189,6 +204,9 @@ class Graph
   #
   # @param [String] first_port
   # @param [String] second_port
+  #
+  # @return [Boolean]
+  #
   def one_does_not_exist(first_port, second_port)
     !@node_hash.include? first_port or !@node_hash.include? second_port
   end
@@ -196,6 +214,9 @@ class Graph
   # Adds a node to the graph if it does not exist yet.
   #
   # @param [String] port
+  #
+  # @return [void]
+  #
   def add_if_non_existing(port)
     unless @node_hash.include? port
       add_node(port)
