@@ -8,20 +8,6 @@ require_relative 'connection'
 #
 class Graph
 
-  # @!attribute node_hash
-  #   @return [Hash]
-  #
-  # @!attribute total_distance
-  #   @return [Integer]
-  #
-  # @!attribute num_of_flights
-  #   @return [Integer]
-  #
-  # @!attribute shortest_flight
-  #   @return [Hash]
-  #
-  # @!attribute longest_flight
-  #   @return [Hash]
   attr_reader :node_hash, :total_distance, :num_of_flights, :shortest_flight, :longest_flight
 
   # Reference value for infinity.
@@ -38,7 +24,6 @@ class Graph
     @num_of_flights = 0
     @shortest_flight = nil
     @longest_flight = nil
-    create_graph_from_json
   end
 
   # Gets a string with appropriate formatting for a graph.
@@ -150,7 +135,6 @@ class Graph
     @connectors.get_connection_url
   end
 
-
   # @param [String] city_code
   #
   # @return [Hash]
@@ -159,7 +143,70 @@ class Graph
     @node_hash[city_code]
   end
 
-  private
+  # Calculates the minimum path between two nodes using Dijkstra's algorithm.
+  #
+  # @param [String] source_node A node used as reference.
+  # @return [Hash, Hash] Two hashes:
+  #
+  # * One with the minimum distance between the nodes, considering the entire path;
+  # * One with the closest neighbor to source_node, if any (nil for itself).
+  #
+  def dijkstra(source_node)
+    dist = Hash.new(INFTY)
+    prev = Hash.new
+    queue = Array.new
+
+    dist[source_node] = 0
+
+    @node_hash.each_key do |vertex|
+      unless vertex == source_node
+        queue.push(vertex)
+      end
+    end
+
+    until queue.empty?
+
+      u, length = closest_node(source_node, queue, dist)
+      queue.delete(u)
+      dist[u] = length
+
+      @node_hash[u].each do |v, length_u_v|
+        alt = dist[u] + length_u_v
+        if alt < dist[v]
+          dist[v] = alt
+          prev[v] = u
+        end
+      end
+
+    end
+
+    [dist, prev]
+  end
+
+  # @param [String] source
+  # @param [Array] queue
+  # @param [Hash] dist
+  #
+  # @return [String, Integer]
+  #
+  def closest_node(source, queue, dist)
+    reference_node = nil
+    reference_dist = INFTY
+    @node_hash[source].each do |destination, distance|
+      if queue.include? (destination)
+        if distance < reference_dist
+          reference_node = destination
+          reference_dist = distance
+        end
+      else
+        if dist[destination] < reference_dist
+          reference_node = destination
+          reference_dist = dist[destination]
+        end
+      end
+    end
+    [reference_node, reference_dist]
+  end
 
   # Creates the graph using the provided JSON file.
   #
@@ -172,6 +219,8 @@ class Graph
       add_connection(route['ports'][0], route['ports'][1], route['distance'])
     end
   end
+
+  private
 
   #
   # @param [String] node

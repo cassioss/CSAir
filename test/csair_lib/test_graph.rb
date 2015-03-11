@@ -56,4 +56,18 @@ class TestGraph < Test::Unit::TestCase
     assert_equal(simple_graph.get_connection('MEX', 'MEX'), 0)
   end
 
+  def test_simple_dijkstra
+    simple_graph = Graph.new
+    simple_graph.add_connection('ABC', 'DEF', 2)
+    simple_graph.add_connection('DEF', 'GHI', 3)
+    simple_graph.add_connection('ABC', 'GHI', 6)  # A shortcut is preferable
+    dist, prev = simple_graph.dijkstra('ABC')
+    assert_equal(dist['ABC'], 0)
+    assert_equal(dist['DEF'], 2)
+    assert_equal(dist['GHI'], 5)
+    assert_nil(prev['ABC'])
+    assert_equal(prev['DEF'], 'ABC')
+    assert_equal(prev['GHI'], 'DEF')
+  end
+
 end
