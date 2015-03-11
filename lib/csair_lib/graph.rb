@@ -14,6 +14,9 @@ class Graph
   INFTY = 1.0/0.0
 
   # Initializes a Graph object.
+  #
+  # @return [void]
+  #
   def initialize
     @node_hash = Hash.new
     @connectors = Connection.new
@@ -42,6 +45,8 @@ class Graph
   # @param [String] second_port The second airport code
   # @param [Integer] distance The distance between the airports (by flight) in miles.
   #
+  # @return [void]
+  #
   def add_connection(first_port, second_port, distance)
     add_if_non_existing(first_port)
     add_if_non_existing(second_port)
@@ -50,6 +55,12 @@ class Graph
     make_statistics(first_port, second_port, distance)
   end
 
+  # @param [String] first_port
+  # @param [String] second_port
+  # @param [Integer] distance
+  #
+  # @return [void]
+  #
   def make_statistics(first_port, second_port, distance)
     distance_hash = {distance => [first_port, second_port].sort }
     @total_distance += distance
@@ -58,6 +69,10 @@ class Graph
     account_for_longest_flight(distance_hash)
   end
 
+  # @param [Hash] distance_hash
+  #
+  # @return [void]
+  #
   def account_for_shortest_flight(distance_hash)
     if @shortest_flight.nil?
       @shortest_flight = distance_hash
@@ -66,6 +81,10 @@ class Graph
     end
   end
 
+  # @param [Hash] distance_hash
+  #
+  # @return [void]
+  #
   def account_for_longest_flight(distance_hash)
     if @shortest_flight.nil?
       @longest_flight = distance_hash
@@ -85,7 +104,7 @@ class Graph
   # @param [String] first_port The first airport code.
   # @param [String] second_port The second airport code.
   #
-  # @return [Integer] The distance
+  # @return [Integer] The distance between the two airports.
   #
   def get_connection(first_port, second_port)
     case
@@ -108,8 +127,8 @@ class Graph
     @node_hash[port_code] = Hash.new(INFTY)
   end
 
-  # Gets the URL addition for the JSON graph. The resulting string has every airport connection separated by commas and
-  # using plus signs (+) for spaces. Examples: 'SCL-MEX', 'SCL-LIM,+LIM-BOG'
+  # Gets the URL addition for the JSON graph. The resulting string has every airport connection separated by
+  # commas and using plus signs (+) for spaces. Examples: 'SCL-MEX', 'SCL-LIM,+LIM-BOG'
   #
   # @return [String] a string containing each airport connection.
   #
@@ -117,11 +136,17 @@ class Graph
     @connectors.get_connection_url
   end
 
+
+  # @param [String] city_code
+  #
+  # @return [Hash]
+  #
   def get_closest_cities(city_code)
     @node_hash[city_code]
   end
 
   private
+
   # Creates the graph using the provided JSON file.
   #
   # @return [void]
@@ -176,4 +201,5 @@ class Graph
       add_node(port)
     end
   end
+
 end

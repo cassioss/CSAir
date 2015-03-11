@@ -9,13 +9,16 @@ require 'launchy'
 #
 class CmdInterface
 
+#
+# @return [void]
+#
   def initialize
     @queries = Query.new
   end
 
 #
+# @return [void]
 #
-# #
   def basic_for_loop
     loop do
       main_menu
@@ -23,28 +26,31 @@ class CmdInterface
       $stdin.flush
       character = gets.chomp
       case character
-        when '1' then
-          list_all_cities
-        when '2' then
-          get_city
-        when '3' then
-          show_statistics
-        when '4' then
-          show_url
-        else
-          break
+        when '1' then list_all_cities
+        when '2' then get_city
+        when '3' then show_statistics
+        when '4' then show_url
+        else break
       end
     end
   end
 
   private
 
+#
+# @return [void]
+#
   def list_all_cities
     puts "\nAll cities CSAir flies to:\n\n"
     @queries.list_all_cities
     print "\n"
   end
 
+# @param [String] city
+# @param [String] number
+#
+# @return [void]
+#
   def specific_information(city, number)
     @queries.get_information_from(city, number)
   end
@@ -60,6 +66,8 @@ class CmdInterface
 # * Continents (detailed by countries) that have CSAir flights;
 # * Hub cities (cities that have the biggest number of flights).
 #
+# @return [void]
+#
   def show_statistics
     puts "\nCSAir statistics:\n\n"
     @queries.get_longest_flight
@@ -73,6 +81,9 @@ class CmdInterface
     print "\n"
   end
 
+#
+# @return [void]
+#
   def main_menu
     puts 'Welcome to CSAir!'
     puts 'Choose an option and press Enter:'
@@ -84,6 +95,9 @@ class CmdInterface
     print 'Your option: '
   end
 
+#
+# @return [void]
+#
   def get_city
     print "\nWrite the name of the city and press Enter: "
     $stdin.flush
@@ -92,6 +106,9 @@ class CmdInterface
     specific_info(city)
   end
 
+# @param [String] city
+# @return [void]
+#
   def specific_info(city)
     print "\nCity code: #{@queries.get_code(city)}\n\n"
     puts "Learn more about #{city}:"
@@ -112,6 +129,9 @@ class CmdInterface
     puts "\n#{@queries.get_information_from(city, option)}\n\n"
   end
 
+#
+# @return [void]
+#
   def show_url
     Launchy.open(@queries.get_popup_url)
     print "\n"
