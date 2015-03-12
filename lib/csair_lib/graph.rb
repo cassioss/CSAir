@@ -76,7 +76,7 @@ class Graph
     if @shortest_flight.empty?
       @shortest_flight['distance'] = distance
       @shortest_flight['ports'] = [first_port, second_port].sort
-    elsif @shortest_flight['distance'] < distance
+    elsif @shortest_flight['distance'] > distance
       @shortest_flight['distance'] = distance
       @shortest_flight['ports'] = [first_port, second_port].sort
     end
@@ -89,12 +89,12 @@ class Graph
   # @return [void]
   #
   def account_for_longest_flight(first_port, second_port, distance)
-    if @shortest_flight.empty?
-      @shortest_flight['distance'] = distance
-      @shortest_flight['ports'] = [first_port, second_port].sort
-    elsif @shortest_flight['distance'] > distance
-      @shortest_flight['distance'] = distance
-      @shortest_flight['ports'] = [first_port, second_port].sort
+    if @longest_flight.empty?
+      @longest_flight['distance'] = distance
+      @longest_flight['ports'] = [first_port, second_port].sort
+    elsif @longest_flight['distance'] < distance
+      @longest_flight['distance'] = distance
+      @longest_flight['ports'] = [first_port, second_port].sort
     end
   end
 

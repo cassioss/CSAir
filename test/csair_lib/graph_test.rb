@@ -133,6 +133,9 @@ class GraphTest < Test::Unit::TestCase
     @simple_graph.add_connection('BGH','ABC', 2030)
     assert_equal(@simple_graph.shortest_flight['distance'], 1029)
     assert_equal(@simple_graph.longest_flight['distance'], 2030)
+    @simple_graph.add_connection('IBF','FBI', 1000)
+    assert_equal(@simple_graph.shortest_flight['distance'], 1000)
+    assert_equal(@simple_graph.longest_flight['distance'], 2030)
   end
 
 end
