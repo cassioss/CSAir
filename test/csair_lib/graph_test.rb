@@ -116,6 +116,8 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.get_url_addition, 'ABC-DEF,+ABD-GEH')
     @simple_graph.delete_direction('DEF', 'ABC')
     assert_equal(@simple_graph.get_url_addition, 'ABC-DEF,+ABD-GEH')
+    @simple_graph.delete_direction('DEF', 'ABC')                      # Repeated again
+    assert_equal(@simple_graph.get_url_addition, 'ABC-DEF,+ABD-GEH')  # for sanity check
     @simple_graph.delete_direction('ABC', 'DEF')
     assert_equal(@simple_graph.get_url_addition, 'ABD-GEH')
   end

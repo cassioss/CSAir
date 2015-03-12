@@ -183,6 +183,9 @@ class Graph
   def delete_direction(first_node, second_node)
     unless one_does_not_exist(first_node, second_node)
       @node_hash[first_node][second_node] = INFTY;
+      if @node_hash[second_node][first_node] == INFTY
+        @connectors.delete_connection(first_node, second_node)
+      end
     end
   end
 
