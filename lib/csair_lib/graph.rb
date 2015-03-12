@@ -66,38 +66,6 @@ class Graph
     account_for_longest_flight(first_port, second_port, distance)
   end
 
-  # @param [String] first_port
-  # @param [String] second_port
-  # @param [Integer] distance
-  #
-  # @return [void]
-  #
-  def account_for_shortest_flight(first_port, second_port, distance)
-    if @shortest_flight.empty?
-      @shortest_flight[:distance] = distance
-      @shortest_flight[:ports] = [first_port, second_port]
-    elsif @shortest_flight[:distance] > distance
-      @shortest_flight[:distance] = distance
-      @shortest_flight[:ports] = [first_port, second_port]
-    end
-  end
-
-  # @param [String] first_port
-  # @param [String] second_port
-  # @param [Integer] distance
-  #
-  # @return [void]
-  #
-  def account_for_longest_flight(first_port, second_port, distance)
-    if @longest_flight.empty?
-      @longest_flight[:distance] = distance
-      @longest_flight[:ports] = [first_port, second_port]
-    elsif @longest_flight[:distance] < distance
-      @longest_flight[:distance] = distance
-      @longest_flight[:ports] = [first_port, second_port]
-    end
-  end
-
   # Gets the value of a connection (or route) between two nodes (or airports).
   #
   # ## Edge cases
@@ -207,6 +175,57 @@ class Graph
     @connectors.delete_connection(first_node, second_node)
   end
 
+  #
+  # @param [String] source
+  #
+  # @return [Array<Hash>]
+  #
+  def dijkstra(source)
+
+    dist = Hash.new(INFTY)
+    prev = Hash.new
+
+    dist[source] = 0
+    queue = Array.new
+
+    @node_hash.each_key{|node| queue.push(node)}
+
+    until queue.empty?
+      u = min_dist(dist, queue)
+      queue.delete(u)
+
+      @node_hash[u].each do |v, length_u_v|
+        if queue.include?(v)
+          alt = dist[u] + length_u_v
+          if alt < dist[v]
+            dist[v] = alt
+            prev[v] = u
+          end
+        end
+      end
+
+    end
+
+    [dist, prev]
+  end
+
+  # @param [Hash] dist
+  # @param [Array] queue
+  #
+  # @return [String]
+  #
+  def min_dist(dist, queue)
+    reference_dist = INFTY
+    reference_node = String.new
+    queue.each do |node|
+      if dist[node] < reference_dist
+        reference_dist = dist[node]
+        reference_node = node
+      end
+    end
+    reference_node
+  end
+
   private
 
   #
@@ -256,6 +275,38 @@ class Graph
   def add_if_non_existing(port)
     unless @node_hash.include? port
       add_node(port)
+    end
+  end
+
+  # @param [String] first_port
+  # @param [String] second_port
+  # @param [Integer] distance
+  #
+  # @return [void]
+  #
+  def account_for_shortest_flight(first_port, second_port, distance)
+    if @shortest_flight.empty?
+      @shortest_flight[:distance] = distance
+      @shortest_flight[:ports] = [first_port, second_port]
+    elsif @shortest_flight[:distance] > distance
+      @shortest_flight[:distance] = distance
+      @shortest_flight[:ports] = [first_port, second_port]
+    end
+  end
+
+  # @param [String] first_port
+  # @param [String] second_port
+  # @param [Integer] distance
+  #
+  # @return [void]
+  #
+  def account_for_longest_flight(first_port, second_port, distance)
+    if @longest_flight.empty?
+      @longest_flight[:distance] = distance
+      @longest_flight[:ports] = [first_port, second_port]
+    elsif @longest_flight[:distance] < distance
+      @longest_flight[:distance] = distance
+      @longest_flight[:ports] = [first_port, second_port]
     end
   end
 

@@ -11,7 +11,7 @@ module CSAir
   cli = CmdInterface.new
   cli.basic_for_loop
 
-  tempHash = {
+  temp_hash = {
       :key_a => 10,
       :key_b => 20,
   }
@@ -19,7 +19,7 @@ module CSAir
   my_path = File.dirname(__FILE__)
   path_to_json = File.join(my_path, '..', 'resources', 'new_map_data.json')
   File.open(path_to_json, 'w') do |f|
-    f.write(tempHash.to_json)
+    f.write(temp_hash.to_json)
   end
 
 end

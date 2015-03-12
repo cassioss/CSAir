@@ -61,6 +61,7 @@ class GraphTest < Test::Unit::TestCase
   end
 
 
+
   # Tests the deletion of a graph node.
   #
   # @return [void]
@@ -122,6 +123,8 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.get_url_addition, 'ABD-GEH')
   end
 
+
+
   # Tests the lookup for shortest and longest flights on the network.
   #
   # @return [void]
@@ -147,6 +150,9 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.longest_flight[:ports], %w(BGH ABC))
   end
 
+
+
+
   # Tests if the shortest flight in the original (initial) CSAir network has 334 km and is from NYC to WAS.
   #
   # @return [void]
@@ -165,6 +171,30 @@ class GraphTest < Test::Unit::TestCase
     @simple_graph.create_graph_from_json
     assert_equal(@simple_graph.longest_flight[:distance], 12051)
     assert_equal(@simple_graph.longest_flight[:ports].sort, %w(LAX SYD))
+  end
+
+
+
+  # Tests if the Dijkstra's algorithm was applied correctly.
+  #
+  # @return [void]
+  #
+  def get_correct_dijkstra
+    @simple_graph.add_connection('ABC', 'DEF', 20)
+    @simple_graph.add_connection('DEF', 'GHI', 20)
+    @simple_graph.add_connection('ABC', 'GHI', 50)
+
+    dist, prev = @simple_graph.dijkstra('ABC')
+
+    # Checks the shortest distance between 'ABC' and the other nodes
+    assert_equal(dist['ABC'], 0)
+    assert_equal(dist['DEF'], 20)
+    assert_equal(dist['GHI'], 40)
+
+    # Checks previous nodes following Dijkstra's algorithm
+    assert_nil(prev['ABC'])
+    assert_equal(prev['DEF'], 'ABC')
+    assert_equal(prev['GHI'], 'DEF')
   end
 
 end
