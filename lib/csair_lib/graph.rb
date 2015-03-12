@@ -23,8 +23,8 @@ class Graph
     @connectors = Connection.new
     @total_distance = 0
     @num_of_flights = 0
-    @shortest_flight = nil
-    @longest_flight = nil
+    @shortest_flight = {'distance' => INFTY, 'ports' => []}
+    @longest_flight = {'distance' => 0, 'ports' => []}
   end
 
   # Gets a string with appropriate formatting for a graph.
@@ -33,9 +33,7 @@ class Graph
   #
   def to_s
     graph_string = '{Graph}'
-    @node_hash.each do |node, node_hash|
-      graph_string << get_node_connections(node, node_hash)
-    end
+    @node_hash.each { |node, node_hash| graph_string << get_node_connections(node, node_hash) }
     graph_string
   end
 
@@ -62,34 +60,41 @@ class Graph
   # @return [void]
   #
   def make_statistics(first_port, second_port, distance)
-    distance_hash = {distance => [first_port, second_port].sort }
     @total_distance += distance
     @num_of_flights += 1
-    account_for_shortest_flight(distance_hash)
-    account_for_longest_flight(distance_hash)
+    account_for_shortest_flight(first_port, second_port, distance)
+    account_for_longest_flight(first_port, second_port, distance)
   end
 
-  # @param [Hash] distance_hash
+  # @param [String] first_port
+  # @param [String] second_port
+  # @param [Integer] distance
   #
   # @return [void]
   #
-  def account_for_shortest_flight(distance_hash)
-    if @shortest_flight.nil?
-      @shortest_flight = distance_hash
-    else
-      @shortest_flight = @shortest_flight.keys[0] < distance_hash.keys[0] ? @shortest_flight : distance_hash
+  def account_for_shortest_flight(first_port, second_port, distance)
+    if @shortest_flight.empty?
+      @shortest_flight['distance'] = distance
+      @shortest_flight['ports'] = [first_port, second_port].sort
+    elsif @shortest_flight['distance'] < distance
+      @shortest_flight['distance'] = distance
+      @shortest_flight['ports'] = [first_port, second_port].sort
     end
   end
 
-  # @param [Hash] distance_hash
+  # @param [String] first_port
+  # @param [String] second_port
+  # @param [Integer] distance
   #
   # @return [void]
   #
-  def account_for_longest_flight(distance_hash)
-    if @shortest_flight.nil?
-      @longest_flight = distance_hash
-    else
-      @shortest_flight = @shortest_flight.keys[0] > distance_hash.keys[0] ? @shortest_flight : distance_hash
+  def account_for_longest_flight(first_port, second_port, distance)
+    if @shortest_flight.empty?
+      @shortest_flight['distance'] = distance
+      @shortest_flight['ports'] = [first_port, second_port].sort
+    elsif @shortest_flight['distance'] > distance
+      @shortest_flight['distance'] = distance
+      @shortest_flight['ports'] = [first_port, second_port].sort
     end
   end
 
@@ -182,7 +187,7 @@ class Graph
   #
   def delete_direction(first_node, second_node)
     unless one_does_not_exist(first_node, second_node)
-      @node_hash[first_node][second_node] = INFTY;
+      @node_hash[first_node][second_node] = INFTY
       if @node_hash[second_node][first_node] == INFTY
         @connectors.delete_connection(first_node, second_node)
       end

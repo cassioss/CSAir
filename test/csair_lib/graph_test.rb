@@ -122,4 +122,17 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.get_url_addition, 'ABD-GEH')
   end
 
+  # Tests the lookup for shortest and longest flights on the network.
+  #
+  # @return [void]
+  #
+  def test_get_short_long_flights
+    @simple_graph.add_connection('ABC', 'DEF', 1029)
+    assert_equal(@simple_graph.shortest_flight['distance'], 1029)
+    assert_equal(@simple_graph.longest_flight['distance'], 1029)
+    @simple_graph.add_connection('BGH','ABC', 2030)
+    assert_equal(@simple_graph.shortest_flight['distance'], 1029)
+    assert_equal(@simple_graph.longest_flight['distance'], 2030)
+  end
+
 end
