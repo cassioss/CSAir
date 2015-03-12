@@ -122,15 +122,7 @@ class Metro
   # @return [void]
   #
   def change_coordinates_to(new_info)
-    raise TypeError, 'The new coordinates do not make a Hash' unless new_info.is_a?(Hash)
-    raise ArgumentError, 'There are not exactly two coordinates in the Hash' unless new_info.size == 2
-
-    raise ArgumentError, 'First coordinate is not N or S' unless new_info.keys[0] == 'N' or new_info.keys[0] == 'S'
-    raise ArgumentError, 'Second coordinate is not E or W' unless new_info.keys[1] == 'E' or new_info.keys[1] == 'W'
-
-    raise RangeError, 'Latitude out of bounds (must be between 0 and 90 degrees)' unless new_info.values[0] >= 0 and new_info.values[0] <= 90
-    raise RangeError, 'Longitude out of bounds (must be between 0 and 180 degrees)' unless new_info.values[1] >= 0 and new_info.values[1] <= 180
-
+    check_exceptions_for_coords(new_info)
     @coordinates = new_info
   end
 
@@ -141,6 +133,20 @@ class Metro
     raise TypeError, 'The new population is not an Integer value' unless new_info.is_a?(Integer)
     raise RangeError, 'Negative value for population' unless new_info >= 0
     @population = new_info
+  end
+
+  private
+
+  # @param [Hash] info_hash
+  # @return [void]
+  #
+  def check_exceptions_for_coords(info_hash)
+    raise TypeError, 'The new coordinates do not make a Hash' unless info_hash.is_a?(Hash)
+    raise ArgumentError, 'There are not exactly two coordinates in the Hash' unless info_hash.size == 2
+    raise ArgumentError, 'First coordinate is not N or S' unless info_hash.keys[0] == 'N' or info_hash.keys[0] == 'S'
+    raise ArgumentError, 'Second coordinate is not E or W' unless info_hash.keys[1] == 'E' or info_hash.keys[1] == 'W'
+    raise RangeError, 'Latitude out of bounds (must be between 0 and 90 degrees)' unless info_hash.values[0] >= 0 and info_hash.values[0] <= 90
+    raise RangeError, 'Longitude out of bounds (must be between 0 and 180 degrees)' unless info_hash.values[1] >= 0 and info_hash.values[1] <= 180
   end
 
 end
