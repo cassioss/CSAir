@@ -48,8 +48,7 @@ class Query
   def get_information_from(city, num)
     code = @dict.encode(city)
     case num
-      when '1' then
-        code
+      when '1' then code
       when '2' then @dict.metros[code].country
       when '3' then @dict.metros[code].continent
       when '4' then @dict.metros[code].timezone
