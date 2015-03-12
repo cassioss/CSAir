@@ -62,7 +62,7 @@ class Dictionary
   def delete_translation(city_name)
     original_key = encode(city_name)
     @dict_key_name.delete(original_key)
-    @dict_name_key.delete(city_name)
+    @dict_name_key.delete(city_name.downcase)
   end
 
   # Changes an airpot code for a given city.

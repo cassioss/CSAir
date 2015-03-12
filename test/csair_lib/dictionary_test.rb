@@ -36,4 +36,26 @@ class DictionaryTest < Test::Unit::TestCase
     assert_nil(@simple_dict.unlock('LIM'))
   end
 
+  # Tests a correct change of an airport code in a given city.
+  #
+  # @return [void]
+  #
+  def test_change_airport_code
+    @simple_dict.change_airport_code('Lima', 'LMA')
+    assert_equal(@simple_dict.encode('Lima'), 'LMA')
+    assert_equal(@simple_dict.unlock('LMA'), 'Lima')
+    assert_nil(@simple_dict.unlock('LIM'))
+  end
+
+  # Tests a correct change of a city name, but not its airport code.
+  #
+  # @return [void]
+  #
+  def test_change_city_name
+    @simple_dict.change_city_name('Lima', 'Limonada')
+    assert_equal(@simple_dict.encode('Limonada'), 'LIM')
+    assert_equal(@simple_dict.unlock('LIM'), 'Limonada')
+    assert_nil(@simple_dict.encode('Lima'))
+  end
+
 end
