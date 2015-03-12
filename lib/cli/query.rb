@@ -236,4 +236,16 @@ class Query
     @dict.encode(name)
   end
 
+  #
+  # @param [Integer] distance
+  #
+  # @return [Float]
+  #
+  def get_time(distance)
+    case distance
+      when 0..400 then 2.0 * Math.sqrt(distance / 1406.25)
+      else (16.0/15.0) + (1.0 * distance - 400.0)/(750.0)
+    end
+  end
+
 end

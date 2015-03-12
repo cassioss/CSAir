@@ -25,6 +25,7 @@ class Graph
     @num_of_flights = 0
     @shortest_flight = {:distance => INFTY, :ports => []}
     @longest_flight = {:distance => 0, :ports => []}
+    @dijkstra_results = Hash.new
   end
 
   # Gets a string with appropriate formatting for a graph.
@@ -209,6 +210,40 @@ class Graph
     end
 
     [dist, prev]
+  end
+
+  # Applies the Dijkstra's algorithm to every node.
+  #
+  # @return [void]
+  #
+  def evaluate_dijkstra
+    @node_hash.each_key do |node|
+      dist, prev = dijkstra(node)
+      @dijkstra_results[node]['dist'] = dist
+      @dijkstra_results[node]['prev'] = prev
+    end
+  end
+
+  # @param [String] source
+  # @param [String] destination
+  #
+  # @return [Array<Array, String>]
+  #
+  def create_shortest_path_and_url(source, destination)
+    path_array = []
+    inverse_path_url = String.new
+    unless source == destination
+      prev = @dijkstra_results[source]['prev']
+      previous_node = destination
+      path_array << previous_node
+      while previous_node != source
+        inverse_path_url << previous_node
+        previous_node = prev[previous_node]
+        path_array << previous_node
+        inverse_path_url << '-' << previous_node << ',+'
+      end
+    end
+    [path_array.reverse, inverse_path_url[0..-3]]
   end
 
   private
