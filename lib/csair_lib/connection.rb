@@ -38,7 +38,7 @@ class Connection
   # @return [void]
   #
   def delete_connection(first, second)
-    @connection_set.add(alphabetical_order(first, second))
+    @connection_set.delete(alphabetical_order(first, second))
   end
 
   private

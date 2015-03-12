@@ -180,7 +180,7 @@ class Graph
   #
   # @return [void]
   #
-  def remove_direction(first_node, second_node)
+  def delete_direction(first_node, second_node)
     unless one_does_not_exist(first_node, second_node)
       @node_hash[first_node][second_node] = INFTY;
     end
@@ -193,9 +193,9 @@ class Graph
   #
   # @return [void]
   #
-  def remove_connection(first_node, second_node)
-    remove_direction(first_node, second_node)
-    remove_direction(second_node, first_node)
+  def delete_connection(first_node, second_node)
+    delete_direction(first_node, second_node)
+    delete_direction(second_node, first_node)
     @connectors.delete_connection(first_node, second_node)
   end
 
