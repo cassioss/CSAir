@@ -12,7 +12,7 @@ class Metro
   # @param [String] name
   # @param [String] country
   # @param [String] continent
-  # @param [String] timezone
+  # @param [Integer] timezone
   # @param [Integer] population
   # @param [Hash] coordinates
   # @param [Integer] region
@@ -71,6 +71,22 @@ class Metro
       when 2 then 'Africa'
       when 3 then 'Europe'
       else 'Asia and Oceania'
+    end
+  end
+
+  # Changes a specific information about a city. Considering plausible changes, only two options are
+  # valid and meaningful: timezone (if the city adopts daylight savings) and population.
+  #
+  # @param [String] option determines which information is going to be changed.
+  # @param [Integer, String] new_info the new information that replaces the original.
+  #
+  # @return [void]
+  #
+  def edit_information_about_city(option, new_info)
+    case option
+      when '1' then @population = new_info
+      when '2' then @timezone = new_info
+      else # Do nothing
     end
   end
 

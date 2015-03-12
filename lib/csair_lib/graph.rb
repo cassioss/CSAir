@@ -143,71 +143,6 @@ class Graph
     @node_hash[city_code]
   end
 
-  # Calculates the minimum path between two nodes using Dijkstra's algorithm.
-  #
-  # @param [String] source_node A node used as reference.
-  # @return [Hash, Hash] Two hashes:
-  #
-  # * One with the minimum distance between the nodes, considering the entire path;
-  # * One with the closest neighbor to source_node, if any (nil for itself).
-  #
-  def dijkstra(source_node)
-    dist = Hash.new(INFTY)
-    prev = Hash.new
-    queue = Array.new
-
-    dist[source_node] = 0
-
-    @node_hash.each_key do |vertex|
-      unless vertex == source_node
-        queue.push(vertex)
-      end
-    end
-
-    until queue.empty?
-
-      u, length = closest_node(source_node, queue, dist)
-      queue.delete(u)
-      dist[u] = length
-
-      @node_hash[u].each do |v, length_u_v|
-        alt = dist[u] + length_u_v
-        if alt < dist[v]
-          dist[v] = alt
-          prev[v] = u
-        end
-      end
-
-    end
-
-    [dist, prev]
-  end
-
-  # @param [String] source
-  # @param [Array] queue
-  # @param [Hash] dist
-  #
-  # @return [String, Integer]
-  #
-  def closest_node(source, queue, dist)
-    reference_node = nil
-    reference_dist = INFTY
-    @node_hash[source].each do |destination, distance|
-      if queue.include? (destination)
-        if distance < reference_dist
-          reference_node = destination
-          reference_dist = distance
-        end
-      else
-        if dist[destination] < reference_dist
-          reference_node = destination
-          reference_dist = dist[destination]
-        end
-      end
-    end
-    [reference_node, reference_dist]
-  end
-
   # Creates the graph using the provided JSON file.
   #
   # @return [void]
@@ -217,6 +152,36 @@ class Graph
     graph_hash = read_me.get_graph_hash
     graph_hash.each do |route|
       add_connection(route['ports'][0], route['ports'][1], route['distance'])
+    end
+  end
+
+  # Allows the removal of a city inside the graph.
+  #
+  # @param [String] city_node
+  #
+  # @return [void]
+  #
+  def remove_city(city_node)
+    if @node_hash.include? (city_node)
+      @node_hash.delete(city_node)
+      @node_hash.each_value do |node_hash|
+        if node_hash.include? (city_node)
+          node_hash.delete(city_node)
+        end
+      end
+    end
+  end
+
+  # Allows the removal of a connection inside the graph.
+  #
+  # @param [String] first_node
+  # @param [String] second_node
+  #
+  # @return [void]
+  #
+  def remove_connection(first_node, second_node)
+    unless one_does_not_exist(first_node, second_node)
+      @node_hash[first_node][second_node] = @node_hash[second_node][first_node] = INFTY;
     end
   end
 
