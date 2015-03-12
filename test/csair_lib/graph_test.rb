@@ -158,7 +158,7 @@ class GraphTest < Test::Unit::TestCase
   # @return [void]
   #
   def test_original_shortest_flight
-    @simple_graph.create_graph_from_json
+    @simple_graph.create_graph_from_json('map_data.json')
     assert_equal(@simple_graph.shortest_flight[:distance], 334)
     assert_equal(@simple_graph.shortest_flight[:ports].sort, %w(NYC WAS))
   end
@@ -168,7 +168,7 @@ class GraphTest < Test::Unit::TestCase
   # @return [void]
   #
   def test_original_longest_flight
-    @simple_graph.create_graph_from_json
+    @simple_graph.create_graph_from_json('map_data.json')
     assert_equal(@simple_graph.longest_flight[:distance], 12051)
     assert_equal(@simple_graph.longest_flight[:ports].sort, %w(LAX SYD))
   end

@@ -10,8 +10,8 @@ class Reader
   #
   # @return [void]
   #
-  def initialize
-    @json_data_hash = data_hash_from_json
+  def initialize(json_file_name)
+    @json_data_hash = data_hash_from_json(json_file_name)
   end
 
   #
@@ -41,9 +41,9 @@ class Reader
   #
   # @return [Hash]
   #
-  def data_hash_from_json
+  def data_hash_from_json(json_file_name)
     my_path = File.dirname(__FILE__)
-    path_to_json = File.join(my_path, '..', '..', 'resources', 'map_data.json')
+    path_to_json = File.join(my_path, '..', '..', 'resources', json_file_name)
     json_file = File.read(path_to_json)
     JSON.parse(json_file)
   end

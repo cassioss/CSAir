@@ -95,8 +95,8 @@ class Dictionary
   #
   # @return [void]
   #
-  def get_metros_from_json
-    read_me = Reader.new
+  def get_metros_from_json(json_file_name)
+    read_me = Reader.new(json_file_name)
     metro_hash = read_me.get_metro_hash
     metro_hash.each do |airport|
       add_metro(airport)

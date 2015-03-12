@@ -14,7 +14,7 @@ class CmdInterface
   # @return [void]
   #
   def initialize
-    @queries = Query.new
+    @queries = Query.new('map_data.json')
   end
 
   # Loop that interacts with the user and returns relevant information about CSAir.

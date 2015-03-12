@@ -13,7 +13,7 @@ class QueryTest < Test::Unit::TestCase
   # @return [void]
   #
   def setup
-    @queries = Query.new
+    @queries = Query.new('map_data.json')
   end
 
 end

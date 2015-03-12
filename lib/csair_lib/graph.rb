@@ -121,8 +121,8 @@ class Graph
   #
   # @return [void]
   #
-  def create_graph_from_json
-    read_me = Reader.new
+  def create_graph_from_json(json_file_name)
+    read_me = Reader.new(json_file_name)
     graph_hash = read_me.get_graph_hash
     graph_hash.each do |route|
       add_connection(route['ports'][0], route['ports'][1], route['distance'])
@@ -175,10 +175,12 @@ class Graph
     @connectors.delete_connection(first_node, second_node)
   end
 
+  # Applies Dijkstra's algorithm in a node (the source).
   #
-  # @param [String] source
+  # @param [String] source the source node taken as reference.
   #
-  # @return [Array<Hash>]
+  # @return [Array<Hash>] two hashes: one for the distance between two nodes (via Dijkstra), and one for the previous
+  # node to any given node (in order to rescue the entire path from the source recursively).
   #
   def dijkstra(source)
 
@@ -209,8 +211,12 @@ class Graph
     [dist, prev]
   end
 
-  # @param [Hash] dist
-  # @param [Array] queue
+  private
+
+  # Finds the node inside a queue with the minimum distance to a source node (omitted).
+  #
+  # @param [Hash] dist a Hash containing the evaluated distance from the source (via Dijkstra).
+  # @param [Array] queue an array containing non-evaluated nodes (via Dijkstra).
   #
   # @return [String]
   #
@@ -225,8 +231,6 @@ class Graph
     end
     reference_node
   end
-
-  private
 
   #
   # @param [String] node
