@@ -9,11 +9,11 @@ require_relative '../../lib/csair_lib/metro'
 #
 class Query
 
-# Constructor that initializes the JSON graph and a dictionary to decode the name of a city to its airport code,
-# and vice-versa.
-#
-# @return [void]
-#
+  # Constructor that initializes the JSON graph and a dictionary to decode the name of a city to its airport code,
+  # and vice-versa.
+  #
+  # @return [void]
+  #
   def initialize
     @json_graph = Graph.new
     @json_graph.create_graph_from_json
@@ -21,62 +21,64 @@ class Query
     @dict.get_metros_from_json
   end
 
-#
-# Prints all the cities in the CSAir network.
-#
-# @return [void]
-#
+  # Prints all the cities in the CSAir network.
+  #
+  # @return [void]
+  #
   def list_all_cities
     alpha_order = SortedSet.new
-    @dict.metros.values.each do |airport|
-      alpha_order.add(airport.name)
-    end
-    alpha_order.each do |name|
-      puts name
-    end
+    @dict.metros.each_value { |airport| alpha_order.add(airport.name) }
+    alpha_order.each { |name| puts name }
   end
 
-# Gets an specific information about a city according to the option entered by a user. Aside from airport code
-# (obtained from a Dictionary object) and the closest cities (obtained from a Graph object), the options return an
-# information from a Metro object related to the city.
-#
-# @param [String] city The city name.
-#
-# @param [String] num The option number, treated as a String.
-#
-# @return [void]
-#
+  # Gets an specific information about a city according to the option entered by a user. Aside from airport code
+  # (obtained from a Dictionary object) and the closest cities (obtained from a Graph object), the options return an
+  # information from a Metro object related to the city.
+  #
+  # @param [String] city the city name.
+  # @param [String] num the option number, treated as a String.
+  #
+  # @return [void]
+  #
   def get_information_from(city, num)
     code = @dict.encode(city)
     case num
-      when '1' then code
-      when '2' then @dict.metros[code].country
-      when '3' then @dict.metros[code].continent
-      when '4' then @dict.metros[code].timezone
-      when '5' then @dict.metros[code].coordinates
-      when '6' then @dict.metros[code].population
-      when '7' then @dict.metros[code].region
-      else get_closest_cities_to(code)
+      when '1' then
+        code
+      when '2' then
+        @dict.metros[code].country
+      when '3' then
+        @dict.metros[code].continent
+      when '4' then
+        @dict.metros[code].timezone
+      when '5' then
+        @dict.metros[code].coordinates
+      when '6' then
+        @dict.metros[code].population
+      when '7' then
+        @dict.metros[code].region
+      else
+        get_closest_cities_to(code)
     end
   end
 
-# Given an airport code, returns a string that contains the city name followed be city code in parenthesis, a
-# common format used to associate cities to airports in search engines.
-#
-# @param [String] port_code An airport code.
-#
-# @return [String] The corresponding city name followed by the airport code in parenthesis.
-#
+  # Given an airport code, returns a string that contains the city name followed be city code in parenthesis, a
+  # common format used to associate cities to airports in search engines.
+  #
+  # @param [String] port_code an airport code.
+  #
+  # @return [String] the corresponding city name followed by the airport code in parenthesis.
+  #
   def city_plus_code(port_code)
     @dict.unlock(port_code) + ' (' + port_code + ')'
   end
 
-# Prints all airports that are connected to a city by one CSAir flight.
-#
-# @param [String] city_code The airport code.
-#
-# @return [void]
-#
+  # Prints all airports that are connected to a city by one CSAir flight.
+  #
+  # @param [String] city_code the airport code.
+  #
+  # @return [void]
+  #
   def get_closest_cities_to(city_code)
     @json_graph.get_closest_cities(city_code).each do |port_code, distance|
       print "\n#{city_plus_code(port_code)} - #{distance.to_s} miles"
@@ -85,10 +87,10 @@ class Query
   end
 
 
-# Prints the longest flight of the network, in miles.
-#
-# @return [void]
-#
+  # Prints the longest flight of the network, in miles.
+  #
+  # @return [void]
+  #
   def get_longest_flight
     port_1 = String.new
     port_2 = String.new
@@ -106,10 +108,10 @@ class Query
              ' miles'
   end
 
-# Prints the shortest flight of the network, in miles.
-#
-# @return [void]
-#
+  # Prints the shortest flight of the network, in miles.
+  #
+  # @return [void]
+  #
   def get_shortest_flight
     port_1 = String.new
     port_2 = String.new
@@ -127,20 +129,20 @@ class Query
              ' miles'
   end
 
-# Prints the average flight distance for an CSAir flight, in miles.
-#
-# @return [void]
-#
+  # Prints the average flight distance for an CSAir flight, in miles.
+  #
+  # @return [void]
+  #
   def get_average_distance
     flight_counter = @json_graph.num_of_flights
     total_distance = @json_graph.total_distance
     puts 'Average flight distance: ' + ((1.0) * total_distance / flight_counter).to_i.to_s + ' miles'
   end
 
-# Prints the biggest city that allocates CSAir flights, in terms of population.
-#
-# @return [void]
-#
+  # Prints the biggest city that allocates CSAir flights, in terms of population.
+  #
+  # @return [void]
+  #
   def get_biggest_city
     city_port = String.new
     ref_population = 0
@@ -153,10 +155,10 @@ class Query
     puts 'Biggest city: ' + city_plus_code(city_port) + ': ' + ref_population.to_s + ' inhabitants'
   end
 
-# Prints the smallest city that allocates CSAir flights, in terms of population.
-#
-# @return [void]
-#
+  # Prints the smallest city that allocates CSAir flights, in terms of population.
+  #
+  # @return [void]
+  #
   def get_smallest_city
     city_port = String.new
     ref_population = 7000000
@@ -169,10 +171,10 @@ class Query
     puts 'Smallest city: ' + city_plus_code(city_port) + ': ' + ref_population.to_s + ' inhabitants'
   end
 
-# Prints the average city size for a city that allocates CSAir flight, in terms of population.
-#
-# @return [void]
-#
+  # Prints the average city size for a city that allocates CSAir flight, in terms of population.
+  #
+  # @return [void]
+  #
   def get_average_city_size
     city_counter = 0
     total_population = 0
@@ -183,10 +185,10 @@ class Query
     puts 'Average population of CSAir cities: ' + ((1.0) * total_population / city_counter).to_i.to_s + ' inhabitants'
   end
 
-# Prints the continents that have CSAir flights, along with the cities that allocate them.
-#
-# @return [void] calls print_hash(city_hash)
-#
+  # Prints the continents that have CSAir flights, along with the cities that allocate them.
+  #
+  # @return [void] calls print_hash(city_hash)
+  #
   def get_continents
     city_hash = Hash.new
     @dict.metros.values.each do |metro|
@@ -198,8 +200,10 @@ class Query
     print_hash(city_hash)
   end
 
-# @return [void]
-#
+  # Prints cities in each continent that have CSAir flights.
+  #
+  # @return [void]
+  #
   def print_hash(city_hash)
     print "\nCSAir cities in each continent"
     city_hash.each do |continent, port_set|
@@ -211,8 +215,10 @@ class Query
     print "\n"
   end
 
-# @return [Integer]
-#
+  # Gets the city with most connections on the CSAir network (graph).
+  #
+  # @return [Integer]
+  #
   def get_most_connections
     reference = 0
     @json_graph.node_hash.values.each do |port_hash|
@@ -223,8 +229,8 @@ class Query
     reference
   end
 
-# @return [void]
-#
+  # @return [void]
+  #
   def get_hub_cities
     reference = get_most_connections
     print "\n\nCities with most CSAir connections (" + reference.to_s + "):\n"
@@ -235,16 +241,16 @@ class Query
     end
   end
 
-# @return [String]
-#
+  # @return [String]
+  #
   def get_popup_url
     'http://www.gcmap.com/mapui?P=' + @json_graph.get_url_addition
   end
 
-# @param [String] name
-#
-# @return [String]
-#
+  # @param [String] name
+  #
+  # @return [String]
+  #
   def get_code(name)
     @dict.encode(name)
   end
