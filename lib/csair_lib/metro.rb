@@ -108,15 +108,21 @@ class Metro
 
   private
 
+  # @param [Integer] new_info
+  # @return [void]
+  #
   def change_timezone_to(new_info)
     raise TypeError, 'The new timezone is not an Integer value' unless new_info.is_a?(Integer)
     raise RangeError, 'New timezone over 12 hours of difference' unless new_info >= -12 and new_info <= 12
     @timezone = new_info
   end
 
+  # @param [Hash] new_info
+  # @return [void]
+  #
   def change_coordinates_to(new_info)
     raise TypeError, 'The new coordinates do not make a Hash' unless new_info.is_a?(Hash)
-    raise ArgumentError, 'There are not two coordinates in the Hash' unless new_info.size == 2
+    raise ArgumentError, 'There are not exactly two coordinates in the Hash' unless new_info.size == 2
 
     raise ArgumentError, 'First coordinate is not N or S' unless new_info.keys[0] == 'N' or new_info.keys[0] == 'S'
     raise ArgumentError, 'Second coordinate is not E or W' unless new_info.keys[1] == 'E' or new_info.keys[1] == 'W'
@@ -127,6 +133,9 @@ class Metro
     @coordinates = new_info
   end
 
+  # @param [Integer] new_info
+  # @return [void]
+  #
   def change_population_to(new_info)
     raise TypeError, 'The new population is not an Integer value' unless new_info.is_a?(Integer)
     raise RangeError, 'Negative value for population' unless new_info >= 0

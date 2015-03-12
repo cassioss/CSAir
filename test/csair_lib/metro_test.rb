@@ -3,10 +3,17 @@
 require 'test/unit'
 require_relative '../../lib/csair_lib/metro'
 
+# Class created to test changes in Metro attributes accordingly.
+#
+# @author Cassio dos Santos Sousa
+# @version 1.0
+#
 class MetroTest < Test::Unit::TestCase
 
-  # Called before every test method runs. Can be used
-  # to set up fixture information.
+  # Sets two metros, one with positive timezone, and one with negative timezone.
+  #
+  # @return [void]
+  #
   def setup
     @positive_metro = Metro.new('Test City', 'United States', 'America', 5, 100000, {'N' => 44, 'W' => 80}, 1)
     @negative_metro = Metro.new('Test City', 'United States', 'America', -5, 100000, {'N' => 44, 'W' => 80}, 1)
@@ -102,7 +109,7 @@ class MetroTest < Test::Unit::TestCase
     exception = assert_raise(ArgumentError) {
       @positive_metro.edit_information_about_city('5', {'S' => 10, 'E' => 20, 'SE' => 30})
     }
-    assert_equal(exception.message, 'There are not two coordinates in the Hash')
+    assert_equal(exception.message, 'There are not exactly two coordinates in the Hash')
   end
 
   # Tests changing to only one coordinate.
@@ -113,7 +120,7 @@ class MetroTest < Test::Unit::TestCase
     exception = assert_raise(ArgumentError) {
       @positive_metro.edit_information_about_city('5', {'S' => 10})
     }
-    assert_equal(exception.message, 'There are not two coordinates in the Hash')
+    assert_equal(exception.message, 'There are not exactly two coordinates in the Hash')
   end
 
   # Tests changing to a latitude different from North ('N') or South ('S').
