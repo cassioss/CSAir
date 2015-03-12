@@ -196,6 +196,7 @@ class Graph
   def remove_connection(first_node, second_node)
     remove_direction(first_node, second_node)
     remove_direction(second_node, first_node)
+    @connectors.delete_connection(first_node, second_node)
   end
 
   private

@@ -9,7 +9,7 @@ class Connection
   # @return [void]
   #
   def initialize
-    @connection_hash = SortedSet.new
+    @connection_set = SortedSet.new
   end
 
   # @param [String] first
@@ -19,7 +19,7 @@ class Connection
   #
   def add_connection(first, second)
     unless first == second
-      @connection_hash.add(alphabetical_order(first, second))
+      @connection_set.add(alphabetical_order(first, second))
     end
   end
 
@@ -27,10 +27,18 @@ class Connection
   #
   def get_connection_url
     url_string = String.new
-    @connection_hash.each do |connection|
+    @connection_set.each do |connection|
       url_string << connection + ',+'
     end
     url_string[0..-3]
+  end
+
+  # Deletes an existing connection between two nodes. This is required when both ways of a connection are deleted.
+  #
+  # @return [void]
+  #
+  def delete_connection(first, second)
+    @connection_set.add(alphabetical_order(first, second))
   end
 
   private

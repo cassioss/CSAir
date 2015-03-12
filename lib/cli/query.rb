@@ -18,6 +18,7 @@ class Query
     @json_graph = Graph.new
     @json_graph.create_graph_from_json
     @dict = Dictionary.new
+    @dict.get_metros_from_json
   end
 
 #

@@ -56,7 +56,9 @@ class Dictionary
   end
 
 
-  # @param [String] city_name
+  # Deletes an existing translation, if any.
+  #
+  # @param [String] city_name the name of the city to be erased from the dictionary.
   # @return [void]
   #
   def delete_translation(city_name)
@@ -65,7 +67,10 @@ class Dictionary
     @dict_name_key.delete(city_name.downcase)
   end
 
-  # Changes an airpot code for a given city.
+  # Changes an airport code for a given city.
+  #
+  # @param [String] city_name the name of the city that changed its airport code.
+  # @param [String] new_key the new airport code (key).
   #
   # @return [void]
   #
@@ -76,8 +81,8 @@ class Dictionary
 
   # Changes a city name without changing its code.
   #
-  # @param [String] original_name
-  # @param [String] new_name
+  # @param [String] original_name the original name of the city.
+  # @param [String] new_name the new city name.
   #
   # @return [void]
   #
