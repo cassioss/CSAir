@@ -3,7 +3,8 @@ require 'json'
 # Module that reads all the data present in the JSON file used as resource.
 #
 # @author Cassio dos Santos Sousa
-# @version 1.0
+# @version 1.1
+# @since 1.0
 #
 class Reader
 

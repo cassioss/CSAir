@@ -20,7 +20,6 @@ class MetroTest < Test::Unit::TestCase
   end
 
 
-
   # Tests whether a positive timezone prints the plus sign (+) when read.
   #
   # @return [void]
