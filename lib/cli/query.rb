@@ -92,20 +92,10 @@ class Query
   # @return [void]
   #
   def get_longest_flight
-    port_1 = String.new
-    port_2 = String.new
-    ref_distance = 0
-    @json_graph.node_hash.each do |first_port, connections|
-      connections.each do |second_port, distance|
-        if distance > ref_distance
-          port_1 = first_port
-          port_2 = second_port
-          ref_distance = distance
-        end
-      end
-    end
-    puts 'Longest flight: ' + city_plus_code(port_1) + ' - ' + city_plus_code(port_2) + ': ' + ref_distance.to_s +
-             ' miles'
+    port_1 = @json_graph.longest_flight[:ports][0]
+    port_2 = @json_graph.longest_flight[:ports][1]
+    dist = @json_graph.longest_flight[:distance]
+    puts 'Longest flight: ' + city_plus_code(port_1) + ' - ' + city_plus_code(port_2) + ': ' + dist.to_s + ' miles'
   end
 
   # Prints the shortest flight of the network, in miles.
@@ -113,19 +103,10 @@ class Query
   # @return [void]
   #
   def get_shortest_flight
-    port_1 = String.new
-    port_2 = String.new
-    ref_distance = 40000
-    @json_graph.node_hash.each do |first_port, connections|
-      connections.each do |second_port, distance|
-        if distance < ref_distance
-          port_1 = first_port
-          port_2 = second_port
-          ref_distance = distance
-        end
-      end
-    end
-    puts 'Shortest flight: ' + city_plus_code(port_1) + ' - ' + city_plus_code(port_2) + ': ' + ref_distance.to_s +
+    port_1 = @json_graph.shortest_flight[:ports][0]
+    port_2 = @json_graph.shortest_flight[:ports][1]
+    dist = @json_graph.shortest_flight[:distance]
+    puts 'Shortest flight: ' + city_plus_code(port_1) + ' - ' + city_plus_code(port_2) + ': ' + dist.to_s +
              ' miles'
   end
 

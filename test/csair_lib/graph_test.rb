@@ -129,22 +129,42 @@ class GraphTest < Test::Unit::TestCase
   def test_get_short_long_flights
     # Adds the first connection - tests initial setting
     @simple_graph.add_connection('ABC', 'DEF', 1029)
-    assert_equal(@simple_graph.shortest_flight['distance'], 1029)
-    assert_equal(@simple_graph.longest_flight['distance'], 1029)
+    assert_equal(@simple_graph.shortest_flight[:distance], 1029)
+    assert_equal(@simple_graph.longest_flight[:distance], 1029)
 
     # Adds a second, bigger connection - tests new longest flight
     @simple_graph.add_connection('BGH','ABC', 2030)
-    assert_equal(@simple_graph.shortest_flight['distance'], 1029)
-    assert_equal(@simple_graph.longest_flight['distance'], 2030)
+    assert_equal(@simple_graph.shortest_flight[:distance], 1029)
+    assert_equal(@simple_graph.longest_flight[:distance], 2030)
 
     # Adds a third, smaller connection - tests new shortest flight
     @simple_graph.add_connection('IBF','FBI', 1000)
-    assert_equal(@simple_graph.shortest_flight['distance'], 1000)
-    assert_equal(@simple_graph.longest_flight['distance'], 2030)
+    assert_equal(@simple_graph.shortest_flight[:distance], 1000)
+    assert_equal(@simple_graph.longest_flight[:distance], 2030)
 
     # Checks if the final ports in each extreme are correct
-    assert_equal(@simple_graph.shortest_flight['ports'], %w(IBF FBI))
-    assert_equal(@simple_graph.longest_flight['ports'], %w(BGH ABC))
+    assert_equal(@simple_graph.shortest_flight[:ports], %w(IBF FBI))
+    assert_equal(@simple_graph.longest_flight[:ports], %w(BGH ABC))
+  end
+
+  # Tests if the shortest flight in the original (initial) CSAir network has 334 km and is from NYC to WAS.
+  #
+  # @return [void]
+  #
+  def test_original_shortest_flight
+    @simple_graph.create_graph_from_json
+    assert_equal(@simple_graph.shortest_flight[:distance], 334)
+    assert_equal(@simple_graph.shortest_flight[:ports].sort, %w(NYC WAS))
+  end
+
+  # Tests if the longest flight in the original (initial) CSAir network has 12051 km and is from LAX to SYD.
+  #
+  # @return [void]
+  #
+  def test_original_longest_flight
+    @simple_graph.create_graph_from_json
+    assert_equal(@simple_graph.longest_flight[:distance], 12051)
+    assert_equal(@simple_graph.longest_flight[:ports].sort, %w(LAX SYD))
   end
 
 end

@@ -14,7 +14,7 @@ class Graph
   # Reference value for infinity.
   INFTY = 1.0/0.0
 
-  # Initializes a Graph object.
+  # Initializes each one of the components that are useful for a Graph object.
   #
   # @return [void]
   #
@@ -23,8 +23,8 @@ class Graph
     @connectors = Connection.new
     @total_distance = 0
     @num_of_flights = 0
-    @shortest_flight = {'distance' => INFTY, 'ports' => []}
-    @longest_flight = {'distance' => 0, 'ports' => []}
+    @shortest_flight = {:distance => INFTY, :ports => []}
+    @longest_flight = {:distance => 0, :ports => []}
   end
 
   # Gets a string with appropriate formatting for a graph.
@@ -74,11 +74,11 @@ class Graph
   #
   def account_for_shortest_flight(first_port, second_port, distance)
     if @shortest_flight.empty?
-      @shortest_flight['distance'] = distance
-      @shortest_flight['ports'] = [first_port, second_port]
-    elsif @shortest_flight['distance'] > distance
-      @shortest_flight['distance'] = distance
-      @shortest_flight['ports'] = [first_port, second_port]
+      @shortest_flight[:distance] = distance
+      @shortest_flight[:ports] = [first_port, second_port]
+    elsif @shortest_flight[:distance] > distance
+      @shortest_flight[:distance] = distance
+      @shortest_flight[:ports] = [first_port, second_port]
     end
   end
 
@@ -90,11 +90,11 @@ class Graph
   #
   def account_for_longest_flight(first_port, second_port, distance)
     if @longest_flight.empty?
-      @longest_flight['distance'] = distance
-      @longest_flight['ports'] = [first_port, second_port]
-    elsif @longest_flight['distance'] < distance
-      @longest_flight['distance'] = distance
-      @longest_flight['ports'] = [first_port, second_port]
+      @longest_flight[:distance] = distance
+      @longest_flight[:ports] = [first_port, second_port]
+    elsif @longest_flight[:distance] < distance
+      @longest_flight[:distance] = distance
+      @longest_flight[:ports] = [first_port, second_port]
     end
   end
 
