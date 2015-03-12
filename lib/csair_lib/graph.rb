@@ -4,7 +4,8 @@ require_relative 'connection'
 # Class created to handle graph creation and reading for the CSAir flight network.
 #
 # @author Cassio dos Santos Sousa
-# @version 1.0
+# @version 1.1
+# @since 1.0
 #
 class Graph
 
@@ -172,7 +173,20 @@ class Graph
     end
   end
 
-  # Allows the removal of a connection inside the graph.
+  # Allows the removal of a connection inside the graph, but in only one direction.
+  #
+  # @param [String] first_node
+  # @param [String] second_node
+  #
+  # @return [void]
+  #
+  def remove_direction(first_node, second_node)
+    unless one_does_not_exist(first_node, second_node)
+      @node_hash[first_node][second_node] = INFTY;
+    end
+  end
+
+  # Allows the removal of a connection inside the graph, in both directions.
   #
   # @param [String] first_node
   # @param [String] second_node
@@ -180,9 +194,8 @@ class Graph
   # @return [void]
   #
   def remove_connection(first_node, second_node)
-    unless one_does_not_exist(first_node, second_node)
-      @node_hash[first_node][second_node] = @node_hash[second_node][first_node] = INFTY;
-    end
+    remove_direction(first_node, second_node)
+    remove_direction(second_node, first_node)
   end
 
   private

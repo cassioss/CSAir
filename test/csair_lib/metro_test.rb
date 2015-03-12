@@ -3,7 +3,7 @@
 require 'test/unit'
 require_relative '../../lib/csair_lib/metro'
 
-# Class created to test changes in Metro attributes accordingly.
+# Test unit created to test changes in Metro attributes accordingly.
 #
 # @author Cassio dos Santos Sousa
 # @version 1.0

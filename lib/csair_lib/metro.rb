@@ -3,7 +3,8 @@
 # Class that keeps track of every specific information about an airport (or metro).
 #
 # @author Cassio dos Santos Sousa
-# @version 1.0
+# @version 1.1
+# @since 1.0
 #
 class Metro
 
