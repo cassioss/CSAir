@@ -183,7 +183,28 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.longest_flight[:ports], %w(BGH ABC))
   end
 
+  # Tests the deletion of a graph node in terms of statistics (shortest/longest flight and
+  # average flight distance).
+  #
+  # @return [void]
+  #
+  def test_stats_deleting_node
+    @simple_graph.add_connection('ABC', 'DEF', 10)  # Shortest flight
+    @simple_graph.add_connection('ABC', 'GHI', 20)  # Longest flights
+    @simple_graph.add_connection('DEF', 'GHI', 18)  # 6 flights, total 96, average 16
 
+    assert_equal(@simple_graph.shortest_flight[:distance], 10)
+    assert_equal(@simple_graph.longest_flight[:distance], 20)
+    assert_equal(@simple_graph.get_average_flight, 16)
+
+    @simple_graph.delete_node('ABC')  # Loses reference for shortest/longest flight
+
+    # There is only one reference for flight - 18 km
+    assert_equal(@simple_graph.shortest_flight[:distance], 18)
+    assert_equal(@simple_graph.shortest_flight[:distance], 18)
+    assert_equal(@simple_graph.get_average_flight, 18)
+
+  end
 
   # Tests if the shortest flight in the original (initial) CSAir network has 334 km and is
   # from NYC to WAS.

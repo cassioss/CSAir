@@ -273,6 +273,48 @@ class Graph
 
   private
 
+  # Recalculates the shortest flight on the network.
+  #
+  # @return [void]
+  #
+  def recalculate_shortest_flight
+    short_flight_reference = INFTY
+    first = String.new
+    second = String.new
+    @node_hash.each do |first_node, routes|
+      routes.each do |second_node, distance|
+        if distance < short_flight_reference
+          short_flight_reference = distance
+          first = first_node
+          second = second_node
+        end
+      end
+    end
+    @shortest_flight[:distance] = short_flight_reference
+    @shortest_flight[:ports] = [first, second]
+  end
+
+  # Recalculates the longest flight on the network.
+  #
+  # @return [void]
+  #
+  def recalculate_longest_flight
+    long_flight_reference = 0
+    first = String.new
+    second = String.new
+    @node_hash.each do |first_node, routes|
+      routes.each do |second_node, distance|
+        if distance > long_flight_reference
+          long_flight_reference = distance
+          first = first_node
+          second = second_node
+        end
+      end
+    end
+    @shortest_flight[:distance] = long_flight_reference
+    @shortest_flight[:ports] = [first, second]
+  end
+
   # Finds the node inside a queue with the minimum distance to a source node (omitted).
   #
   # @param [Hash] dist a Hash containing the evaluated distance from the source (via Dijkstra).
