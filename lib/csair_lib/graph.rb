@@ -1,5 +1,6 @@
 require_relative 'reader'
 require_relative 'connection'
+require_relative '../utils/graph/dijkstra'
 
 # Class created to handle graph creation and reading for the CSAir flight network.
 #
@@ -9,10 +10,8 @@ require_relative 'connection'
 #
 class Graph
 
+  include Dijkstra
   attr_reader :node_hash, :total_distance, :num_of_flights, :shortest_flight, :longest_flight
-
-  # Reference value for infinity.
-  INFTY = 1.0/0.0
 
   # Initializes each one of the components that are useful for a Graph object.
   #
@@ -227,76 +226,6 @@ class Graph
   def delete_connection(first_node, second_node)
     delete_route(first_node, second_node)
     delete_route(second_node, first_node)
-  end
-
-  # Applies Dijkstra's algorithm in a node (the source).
-  #
-  # @param [String] source the source node taken as reference.
-  #
-  # @return [Array<Hash>] two hashes: one for the distance between two nodes (via Dijkstra), and one for the previous
-  # node to any given node (in order to rescue the entire path from the source recursively).
-  #
-  def dijkstra(source)
-
-    dist = Hash.new(INFTY)
-    prev = Hash.new
-
-    dist[source] = 0
-    queue = Array.new
-
-    @node_hash.each_key { |node| queue.push(node) }
-
-    until queue.empty?
-      u = min_dist(dist, queue)
-      queue.delete(u)
-
-      @node_hash[u].each do |v, length_u_v|
-        if queue.include?(v)
-          alt = dist[u] + length_u_v
-          if alt < dist[v]
-            dist[v] = alt
-            prev[v] = u
-          end
-        end
-      end
-
-    end
-
-    [dist, prev]
-  end
-
-  # Applies the Dijkstra's algorithm to every node.
-  #
-  # @return [void]
-  #
-  def evaluate_dijkstra
-    @node_hash.each_key do |node|
-      dist, prev = dijkstra(node)
-      @dijkstra_results[node]['dist'] = dist
-      @dijkstra_results[node]['prev'] = prev
-    end
-  end
-
-  # @param [String] source
-  # @param [String] destination
-  #
-  # @return [Array<Array, String>]
-  #
-  def create_shortest_path_and_url(source, destination)
-    path_array = []
-    inverse_path_url = String.new
-    unless source == destination
-      prev = @dijkstra_results[source]['prev']
-      previous_node = destination
-      path_array << previous_node
-      while previous_node != source
-        inverse_path_url << previous_node
-        previous_node = prev[previous_node]
-        path_array << previous_node
-        inverse_path_url << '-' << previous_node << ',+'
-      end
-    end
-    [path_array.reverse, inverse_path_url[0..-3]]
   end
 
   private
