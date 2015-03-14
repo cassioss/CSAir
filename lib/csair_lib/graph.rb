@@ -213,6 +213,7 @@ class Graph
       unless @node_hash[second_node].include? first_node
         @connectors.delete_connection(first_node, second_node)
       end
+      check_extreme_flights(first_node) # Checking only one of the nodes is required
     end
   end
 

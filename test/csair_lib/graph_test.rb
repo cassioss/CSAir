@@ -106,7 +106,7 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.get_route('ABC', 'DEF'), -1)
   end
 
-  # Tests the deletion of one direction between two nodes (loses one way, but not both).
+  # Tests the deletion of one route between two nodes (loses one way, but not both).
   #
   # @return [void]
   #
@@ -181,6 +181,30 @@ class GraphTest < Test::Unit::TestCase
     # Checks if the final ports in each extreme are correct
     assert_equal(@simple_graph.shortest_flight[:ports], %w(IBF FBI))
     assert_equal(@simple_graph.longest_flight[:ports], %w(BGH ABC))
+  end
+
+  # Tests the deletion of the shortest flight in the network.
+  #
+  # @return [void]
+  #
+  def test_delete_shortest_route
+    @simple_graph.add_route('ABC', 'DEF', 100)
+    @simple_graph.add_route('ABC', 'GHI', 20)
+    assert_equal(@simple_graph.shortest_flight[:distance], 20)
+    @simple_graph.delete_route('ABC', 'GHI')
+    assert_equal(@simple_graph.shortest_flight[:distance], 100)
+  end
+
+  # Tests the deletion of the longest flight in the network.
+  #
+  # @return [void]
+  #
+  def test_delete_longest_route
+    @simple_graph.add_route('ABC', 'DEF', 20)
+    @simple_graph.add_route('ABC', 'GHI', 100)
+    assert_equal(@simple_graph.longest_flight[:distance], 100)
+    @simple_graph.delete_route('ABC', 'GHI')
+    assert_equal(@simple_graph.longest_flight[:distance], 20)
   end
 
   # Tests the deletion of a graph node in terms of statistics (shortest/longest flight and
