@@ -23,6 +23,16 @@ class GraphTest < Test::Unit::TestCase
   #
   # @return [void]
   #
+  def test_add_route
+    @simple_graph.add_route('MEX', 'CHI', 2131)
+    assert_equal(@simple_graph.get_connection('MEX', 'CHI'), 2131)
+    assert_equal(@simple_graph.get_connection('CHI', 'MEX'), INFTY)
+  end
+
+  # Tests if the insertion of connection between ports is bilateral.
+  #
+  # @return [void]
+  #
   def test_add_connection
     @simple_graph.add_connection('MEX', 'CHI', 2131)
     @simple_graph.add_connection('MEX', 'SCL', 2123)
@@ -60,7 +70,31 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.get_connection('MEX', 'MEX'), 0)
   end
 
+  # Tests getting the correct average between the flights.
+  #
+  # @return [void]
+  #
+  def test_get_average_flight
+    @simple_graph.add_connection('ABC', 'DEF', 20)  # 2 flights, total 40, average 20
+    @simple_graph.add_connection('DEF', 'GHI', 20)  # 4 flights, total 80, average 20
+    @simple_graph.add_route('ABC', 'GHI', 120)      # 5 flights, total 200, average 40
+    assert_equal(@simple_graph.total_distance, 200)
+    assert_equal(@simple_graph.num_of_flights, 5)
+    assert_equal(@simple_graph.get_average_flight, 40.0)
+  end
 
+  # Tests getting the correct average between the flights.
+  #
+  # @return [void]
+  #
+  def test_average_removing_routes
+    @simple_graph.add_connection('ABC', 'DEF', 20)
+    assert_equal(@simple_graph.get_average_flight, 20.0)  # 2 flights, total 40, average 20
+    @simple_graph.add_connection('DEF', 'GHI', 80)
+    assert_equal(@simple_graph.get_average_flight, 50.0)  # 4 flights, total 200, average 50
+    @simple_graph.delete_route('ABC', 'DEF')
+    assert_equal(@simple_graph.get_average_flight, 60.0)  # 3 flights, total 180, average 60
+  end
 
   # Tests the deletion of a graph node.
   #
@@ -78,7 +112,7 @@ class GraphTest < Test::Unit::TestCase
   #
   def test_delete_direction
     @simple_graph.add_connection('ABC', 'DEF', 10)
-    @simple_graph.delete_direction('ABC', 'DEF')
+    @simple_graph.delete_route('ABC', 'DEF')
     assert_equal(@simple_graph.get_connection('ABC', 'DEF'), INFTY)
     assert_equal(@simple_graph.get_connection('DEF', 'ABC'), 10)
   end
@@ -106,8 +140,8 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.get_url_addition, 'ABD-GEH')
   end
 
-  # Tests when to delete a connection between two nodes in the graph's URL addition, after only one of the directions has
-  # been removed.
+  # Tests when to delete a connection between two nodes in the graph's URL addition, after only one
+  # of the directions has been removed.
   #
   # @return [void]
   #
@@ -115,14 +149,13 @@ class GraphTest < Test::Unit::TestCase
     @simple_graph.add_connection('ABC', 'DEF', 10)
     @simple_graph.add_connection('ABD', 'GEH', 10)
     assert_equal(@simple_graph.get_url_addition, 'ABC-DEF,+ABD-GEH')
-    @simple_graph.delete_direction('DEF', 'ABC')
+    @simple_graph.delete_route('DEF', 'ABC')
     assert_equal(@simple_graph.get_url_addition, 'ABC-DEF,+ABD-GEH')
-    @simple_graph.delete_direction('DEF', 'ABC')                      # Repeated again
+    @simple_graph.delete_route('DEF', 'ABC')                          # Repeated again
     assert_equal(@simple_graph.get_url_addition, 'ABC-DEF,+ABD-GEH')  # for sanity check
-    @simple_graph.delete_direction('ABC', 'DEF')
+    @simple_graph.delete_route('ABC', 'DEF')
     assert_equal(@simple_graph.get_url_addition, 'ABD-GEH')
   end
-
 
 
   # Tests the lookup for shortest and longest flights on the network.
@@ -152,8 +185,8 @@ class GraphTest < Test::Unit::TestCase
 
 
 
-
-  # Tests if the shortest flight in the original (initial) CSAir network has 334 km and is from NYC to WAS.
+  # Tests if the shortest flight in the original (initial) CSAir network has 334 km and is
+  # from NYC to WAS.
   #
   # @return [void]
   #
@@ -163,7 +196,8 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.shortest_flight[:ports].sort, %w(NYC WAS))
   end
 
-  # Tests if the longest flight in the original (initial) CSAir network has 12051 km and is from LAX to SYD.
+  # Tests if the longest flight in the original (initial) CSAir network has 12051 km and is
+  # from LAX to SYD.
   #
   # @return [void]
   #
@@ -173,13 +207,23 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.longest_flight[:ports].sort, %w(LAX SYD))
   end
 
+  # Tests if the average flight distance in the original (initial) CSAir network
+  # has 2300 km (after turning it to an Integer).
+  #
+  # @return [void]
+  #
+  def test_original_average_flight
+    @simple_graph.create_graph_from_json('map_data.json')
+    assert_equal(@simple_graph.get_average_flight.to_i, 2300)
+  end
+
 
 
   # Tests if the Dijkstra's algorithm was applied correctly.
   #
   # @return [void]
   #
-  def get_correct_dijkstra
+  def test_correct_dijkstra
     @simple_graph.add_connection('ABC', 'DEF', 20)
     @simple_graph.add_connection('DEF', 'GHI', 20)
     @simple_graph.add_connection('ABC', 'GHI', 50)
@@ -195,6 +239,32 @@ class GraphTest < Test::Unit::TestCase
     assert_nil(prev['ABC'])
     assert_equal(prev['DEF'], 'ABC')
     assert_equal(prev['GHI'], 'DEF')
+  end
+
+  # Tests if the Dijkstra's algorithm was applied correctly for an edge case (which fails for a purely
+  # greedy algorithm).
+  #
+  # @return [void]
+  #
+  def test_dijkstra_edge_case
+    @simple_graph.add_connection('ABC', 'DEF', 20)
+    @simple_graph.add_connection('DEF', 'GHI', 20)
+    @simple_graph.add_connection('GHI', 'JKL', 20)
+    @simple_graph.add_connection('ABC', 'JKL', 50)
+
+    dist, prev = @simple_graph.dijkstra('ABC')
+
+    # Checks the shortest distance between 'ABC' and the other nodes
+    assert_equal(dist['ABC'], 0)
+    assert_equal(dist['DEF'], 20)
+    assert_equal(dist['GHI'], 40)
+    assert_equal(dist['JKL'], 50)
+
+    # Checks previous nodes following Dijkstra's algorithm
+    assert_nil(prev['ABC'])
+    assert_equal(prev['DEF'], 'ABC')
+    assert_equal(prev['GHI'], 'DEF')
+    assert_equal(prev['JKL'], 'ABC')
   end
 
 end

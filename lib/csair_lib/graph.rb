@@ -38,22 +38,47 @@ class Graph
     graph_string
   end
 
-  # Adds a connection between two nodes in the graph, creating them if necessary.
+  # Gets the current average flight distance in the CSAir network, in kilometers.
+  #
+  # @return [Float]
+  #
+  def get_average_flight
+    (1.0 * @total_distance) / (1.0 * @num_of_flights)
+  end
+
+  # Adds a route between two nodes in the graph, creating them if necessary. A route is unidirectional,
+  # which means that the opposite direction might have either a different path, or no path at all.
   #
   # @param [String] first_port The first airport code
   # @param [String] second_port The second airport code
-  # @param [Integer] distance The distance between the airports (by flight) in miles.
+  # @param [Integer] distance The distance between the airports (by flight) in kilometers.
+  #
+  # @return [void]
+  #
+  def add_route(first_port, second_port, distance)
+    add_if_non_existing(first_port)
+    add_if_non_existing(second_port)
+    @connectors.add_connection(first_port, second_port)
+    @node_hash[first_port][second_port] = distance
+    make_statistics(first_port, second_port, distance)
+  end
+
+  # Adds a connection between two nodes in the graph, creating them if necessary. A connection works
+  # for both ways of a flight.
+  #
+  # @param [String] first_port The first airport code
+  # @param [String] second_port The second airport code
+  # @param [Integer] distance The distance between the airports (by flight) in kilometers.
   #
   # @return [void]
   #
   def add_connection(first_port, second_port, distance)
-    add_if_non_existing(first_port)
-    add_if_non_existing(second_port)
-    @connectors.add_connection(first_port, second_port)
-    @node_hash[first_port][second_port] = @node_hash[second_port][first_port] = distance
-    make_statistics(first_port, second_port, distance)
+    add_route(first_port, second_port, distance)
+    add_route(second_port, first_port, distance)
   end
 
+  # Account every new route for statistics.
+  #
   # @param [String] first_port
   # @param [String] second_port
   # @param [Integer] distance
@@ -81,13 +106,10 @@ class Graph
   # @return [Integer] The distance between the two airports.
   #
   def get_connection(first_port, second_port)
-    case
-      when one_does_not_exist(first_port, second_port) then
-        -1
-      when first_port == second_port then
-        0
-      else
-        @node_hash[first_port][second_port]
+    if one_does_not_exist(first_port, second_port)
+      -1
+    else
+      @node_hash[first_port][second_port]
     end
   end
 
@@ -99,6 +121,7 @@ class Graph
   #
   def add_node(port_code)
     @node_hash[port_code] = Hash.new(INFTY)
+    @node_hash[port_code][port_code] = 0
   end
 
   # Gets the URL addition for the JSON graph. The resulting string has every airport connection separated by
@@ -154,11 +177,13 @@ class Graph
   #
   # @return [void]
   #
-  def delete_direction(first_node, second_node)
-    unless one_does_not_exist(first_node, second_node)
+  def delete_route(first_node, second_node)
+    unless route_does_not_exist(first_node, second_node)
+      @total_distance -= @node_hash[first_node][second_node]
+      @num_of_flights -= 1
       @node_hash[first_node][second_node] = INFTY
       if @node_hash[second_node][first_node] == INFTY
-        @connectors.delete_connection(first_node, second_node)
+          @connectors.delete_connection(first_node, second_node)
       end
     end
   end
@@ -171,8 +196,8 @@ class Graph
   # @return [void]
   #
   def delete_connection(first_node, second_node)
-    delete_direction(first_node, second_node)
-    delete_direction(second_node, first_node)
+    delete_route(first_node, second_node)
+    delete_route(second_node, first_node)
     @connectors.delete_connection(first_node, second_node)
   end
 
@@ -191,7 +216,7 @@ class Graph
     dist[source] = 0
     queue = Array.new
 
-    @node_hash.each_key{|node| queue.push(node)}
+    @node_hash.each_key { |node| queue.push(node) }
 
     until queue.empty?
       u = min_dist(dist, queue)
@@ -303,6 +328,18 @@ class Graph
   #
   def one_does_not_exist(first_port, second_port)
     !@node_hash.include? first_port or !@node_hash.include? second_port
+  end
+
+  # Checks if a certain route does not exist in the graph. Uses the previous method, but adds the
+  # fact that a non-existing route between two existing nodes is infinite.
+  #
+  # @param [String] first_port
+  # @param [String] second_port
+  #
+  # @return [Boolean]
+  #
+  def route_does_not_exist(first_port, second_port)
+    one_does_not_exist(first_port, second_port) or @node_hash[first_port][second_port] == INFTY
   end
 
   # Adds a node to the graph if it does not exist yet.
