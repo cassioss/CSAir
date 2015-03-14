@@ -92,7 +92,7 @@ class Graph
     account_for_longest_flight(first_port, second_port, distance)
   end
 
-  # Gets the value of a connection (or route) between two nodes (or airports).
+  # Gets the value of a route (exclusively in one way) between two nodes (or airports).
   #
   # ## Edge cases
   #
@@ -103,9 +103,9 @@ class Graph
   # @param [String] first_port The first airport code.
   # @param [String] second_port The second airport code.
   #
-  # @return [Integer] The distance between the two airports.
+  # @return [Integer] The distance between the two airports, in kilometers.
   #
-  def get_connection(first_port, second_port)
+  def get_route(first_port, second_port)
     if one_does_not_exist(first_port, second_port)
       -1
     else
@@ -159,7 +159,7 @@ class Graph
   #
   # @return [void]
   #
-  def remove_city(city_node)
+  def delete_node(city_node)
     if @node_hash.include? (city_node)
       @node_hash.delete(city_node)
       @node_hash.each_value do |node_hash|

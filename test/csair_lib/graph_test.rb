@@ -25,8 +25,8 @@ class GraphTest < Test::Unit::TestCase
   #
   def test_add_route
     @simple_graph.add_route('MEX', 'CHI', 2131)
-    assert_equal(@simple_graph.get_connection('MEX', 'CHI'), 2131)
-    assert_equal(@simple_graph.get_connection('CHI', 'MEX'), INFTY)
+    assert_equal(@simple_graph.get_route('MEX', 'CHI'), 2131)
+    assert_equal(@simple_graph.get_route('CHI', 'MEX'), INFTY)
   end
 
   # Tests if the insertion of connection between ports is bilateral.
@@ -36,8 +36,8 @@ class GraphTest < Test::Unit::TestCase
   def test_add_connection
     @simple_graph.add_connection('MEX', 'CHI', 2131)
     @simple_graph.add_connection('MEX', 'SCL', 2123)
-    assert_equal(@simple_graph.get_connection('MEX', 'CHI'), 2131)
-    assert_equal(@simple_graph.get_connection('CHI', 'MEX'), 2131)
+    assert_equal(@simple_graph.get_route('MEX', 'CHI'), 2131)
+    assert_equal(@simple_graph.get_route('CHI', 'MEX'), 2131)
   end
 
   # Tests getting the connection of an airport that does not exist.
@@ -46,8 +46,8 @@ class GraphTest < Test::Unit::TestCase
   #
   def test_get_non_existing_airport
     @simple_graph.add_connection('MEX', 'CHI', 3141)
-    assert_equal(@simple_graph.get_connection('MEX', 'ABC'), -1)
-    assert_equal(@simple_graph.get_connection('ABC', 'MEX'), -1)
+    assert_equal(@simple_graph.get_route('MEX', 'ABC'), -1)
+    assert_equal(@simple_graph.get_route('ABC', 'MEX'), -1)
   end
 
   # Tests getting the connection of two existing but disconnected airports.
@@ -57,8 +57,8 @@ class GraphTest < Test::Unit::TestCase
   def test_get_disconnected_airports
     @simple_graph.add_node('MEX')
     @simple_graph.add_node('CHI')
-    assert_equal(@simple_graph.get_connection('MEX', 'CHI'), INFTY)
-    assert_equal(@simple_graph.get_connection('CHI', 'MEX'), INFTY)
+    assert_equal(@simple_graph.get_route('MEX', 'CHI'), INFTY)
+    assert_equal(@simple_graph.get_route('CHI', 'MEX'), INFTY)
   end
 
   # Tests getting the connection between an airport and itself.
@@ -67,7 +67,7 @@ class GraphTest < Test::Unit::TestCase
   #
   def test_get_same_airport
     @simple_graph.add_node('MEX')
-    assert_equal(@simple_graph.get_connection('MEX', 'MEX'), 0)
+    assert_equal(@simple_graph.get_route('MEX', 'MEX'), 0)
   end
 
   # Tests getting the correct average between the flights.
@@ -96,25 +96,25 @@ class GraphTest < Test::Unit::TestCase
     assert_equal(@simple_graph.get_average_flight, 60.0)  # 3 flights, total 180, average 60
   end
 
-  # Tests the deletion of a graph node.
+  # Tests the deletion of a graph node in terms of finding a route.
   #
   # @return [void]
   #
-  def test_delete_node
+  def test_route_after_delete_node
     @simple_graph.add_connection('ABC', 'DEF', 10)
-    @simple_graph.remove_city('ABC')
-    assert_equal(@simple_graph.get_connection('ABC', 'DEF'), -1)
+    @simple_graph.delete_node('ABC')
+    assert_equal(@simple_graph.get_route('ABC', 'DEF'), -1)
   end
 
   # Tests the deletion of one direction between two nodes (loses one way, but not both).
   #
   # @return [void]
   #
-  def test_delete_direction
+  def test_delete_route
     @simple_graph.add_connection('ABC', 'DEF', 10)
     @simple_graph.delete_route('ABC', 'DEF')
-    assert_equal(@simple_graph.get_connection('ABC', 'DEF'), INFTY)
-    assert_equal(@simple_graph.get_connection('DEF', 'ABC'), 10)
+    assert_equal(@simple_graph.get_route('ABC', 'DEF'), INFTY)
+    assert_equal(@simple_graph.get_route('DEF', 'ABC'), 10)
   end
 
   # Tests the deletion of one connection between two nodes (loses both ways).
@@ -124,8 +124,8 @@ class GraphTest < Test::Unit::TestCase
   def test_delete_connection
     @simple_graph.add_connection('ABC', 'DEF', 10)
     @simple_graph.delete_connection('ABC', 'DEF')
-    assert_equal(@simple_graph.get_connection('ABC', 'DEF'), INFTY)
-    assert_equal(@simple_graph.get_connection('DEF', 'ABC'), INFTY)
+    assert_equal(@simple_graph.get_route('ABC', 'DEF'), INFTY)
+    assert_equal(@simple_graph.get_route('DEF', 'ABC'), INFTY)
   end
 
   # Tests the deletion of a connection between two nodes in the graph's URL addition.
