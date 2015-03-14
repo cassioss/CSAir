@@ -199,11 +199,10 @@ class GraphTest < Test::Unit::TestCase
 
     @simple_graph.delete_node('ABC')  # Loses reference for shortest/longest flight
 
-    # There is only one reference for flight - 18 km
+    # There is only one reference for stats - 18 km
     assert_equal(@simple_graph.shortest_flight[:distance], 18)
-    assert_equal(@simple_graph.shortest_flight[:distance], 18)
+    assert_equal(@simple_graph.longest_flight[:distance], 18)
     assert_equal(@simple_graph.get_average_flight, 18)
-
   end
 
   # Tests if the shortest flight in the original (initial) CSAir network has 334 km and is

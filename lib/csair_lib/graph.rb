@@ -108,6 +108,8 @@ class Graph
   def get_route(first_port, second_port)
     if one_does_not_exist(first_port, second_port)
       -1
+    elsif first_port == second_port
+      0
     else
       @node_hash[first_port][second_port]
     end
@@ -121,7 +123,6 @@ class Graph
   #
   def add_node(port_code)
     @node_hash[port_code] = Hash.new(INFTY)
-    @node_hash[port_code][port_code] = 0
   end
 
   # Gets the URL addition for the JSON graph. The resulting string has every airport connection separated by
@@ -161,12 +162,39 @@ class Graph
   #
   def delete_node(city_node)
     if @node_hash.include? (city_node)
-      @node_hash.delete(city_node)
-      @node_hash.each_value do |node_hash|
+      delete_routes_from(city_node)
+      @node_hash.each do |source_node, node_hash|
         if node_hash.include? (city_node)
-          node_hash.delete(city_node)
+          delete_route(source_node, city_node)
         end
       end
+      @node_hash.delete(city_node)
+      check_extreme_flights(city_node)
+    end
+  end
+
+
+  # @param [String] source
+  #
+  # @return [void]
+  #
+  def delete_routes_from(source)
+    @node_hash[source].each_key { |destination| delete_route(source, destination)}
+  end
+
+  # Check if the extreme flights (shortest and longest) contain a specific node (that's being
+  # deleted), and if so, recalculate them.
+  #
+  # @param [String] node
+  #
+  # @return [void]
+  #
+  def check_extreme_flights(node)
+    if @shortest_flight[:ports].include? node
+      recalculate_shortest_flight
+    end
+    if @longest_flight[:ports].include? node
+      recalculate_longest_flight
     end
   end
 
@@ -181,9 +209,9 @@ class Graph
     unless route_does_not_exist(first_node, second_node)
       @total_distance -= @node_hash[first_node][second_node]
       @num_of_flights -= 1
-      @node_hash[first_node][second_node] = INFTY
-      if @node_hash[second_node][first_node] == INFTY
-          @connectors.delete_connection(first_node, second_node)
+      @node_hash[first_node].delete(second_node)
+      unless @node_hash[second_node].include? first_node
+        @connectors.delete_connection(first_node, second_node)
       end
     end
   end
@@ -198,7 +226,6 @@ class Graph
   def delete_connection(first_node, second_node)
     delete_route(first_node, second_node)
     delete_route(second_node, first_node)
-    @connectors.delete_connection(first_node, second_node)
   end
 
   # Applies Dijkstra's algorithm in a node (the source).
@@ -311,8 +338,8 @@ class Graph
         end
       end
     end
-    @shortest_flight[:distance] = long_flight_reference
-    @shortest_flight[:ports] = [first, second]
+    @longest_flight[:distance] = long_flight_reference
+    @longest_flight[:ports] = [first, second]
   end
 
   # Finds the node inside a queue with the minimum distance to a source node (omitted).
