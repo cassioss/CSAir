@@ -11,7 +11,7 @@ require_relative '../utils/graph/dijkstra'
 class Graph
 
   include Dijkstra
-  attr_reader :node_hash, :total_distance, :num_of_flights, :shortest_flight, :longest_flight
+  attr_reader :node_hash, :total_distance, :num_of_flights, :shortest_flight, :longest_flight, :short_paths
 
   # Initializes each one of the components that are useful for a Graph object.
   #
@@ -24,7 +24,7 @@ class Graph
     @num_of_flights = 0
     @shortest_flight = {:distance => INFTY, :ports => []}
     @longest_flight = {:distance => 0, :ports => []}
-    @dijkstra_results = Hash.new
+    @short_paths = Hash.new
   end
 
   # Gets a string with appropriate formatting for a graph.
@@ -226,6 +226,31 @@ class Graph
   def delete_connection(first_node, second_node)
     delete_route(first_node, second_node)
     delete_route(second_node, first_node)
+  end
+
+  # Applies the Dijkstra's algorithm to every node in the graph.
+  #
+  # @return [void]
+  #
+  def evaluate_dijkstra
+    @short_paths = Hash.new
+    @node_hash.each_key do |node|
+      dist, prev = dijkstra(node, @node_hash)
+      @short_paths[node] = Hash.new
+      @short_paths[node]['dist'] = dist
+      @short_paths[node]['prev'] = prev
+    end
+  end
+
+  # Finds a path between two nodes after having applied Dijkstra's algorithm.
+  #
+  # @param [String] first_node
+  # @param [String] second_node
+  #
+  # @return [Array<String>]
+  #
+  def shortest_path_between(first_node, second_node)
+    create_shortest_path(first_node, second_node, @short_paths[first_node]['prev'])
   end
 
   private

@@ -47,23 +47,8 @@ module Dijkstra
     [dist, prev]
   end
 
-  # Applies the Dijkstra's algorithm to every node in a graph.
-  #
-  # @param [Hash] graph_hash a Hash containing the graph to apply Dijkstra.
-  #
-  # @return [Hash]
-  #
-  def evaluate_dijkstra(graph_hash)
-    dijkstra_results = Hash.new
-    graph_hash.each_key do |node|
-      dist, prev = dijkstra(node, graph_hash)
-      dijkstra_results[node]['dist'] = dist
-      dijkstra_results[node]['prev'] = prev
-    end
-    dijkstra_results
-  end
-
-  # Finds the shortest path between two nodes using Dijkstra's algorithm.
+  # Finds the shortest path between two nodes using Dijkstra's algorithm to iterate over
+  # previous nodes.
   #
   # @param [String] source
   # @param [String] destination
@@ -84,15 +69,17 @@ module Dijkstra
     path_array.reverse
   end
 
+  # Gets the string corresponding to a path array between two nodes.
+  #
   # @param [Array] path_array
   #
   # @return [String]
-  # 
+  #
   def create_url_from_path(path_array)
-    url_string = String.new
+    url_string = ''
     path_array.each_with_index do |node, index|
       unless index + 1 == path_array.size
-        url_string << node << '-' << path_array[index + 1] << ',+'
+        url_string << node + '-' + path_array[index + 1] + ',+'
       end
     end
     path_array[0..-3]
