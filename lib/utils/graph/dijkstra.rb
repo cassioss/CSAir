@@ -76,13 +76,14 @@ module Dijkstra
   # @return [String]
   #
   def create_url_from_path(path_array)
-    url_string = ''
-    path_array.each_with_index do |node, index|
-      unless index + 1 == path_array.size
-        url_string << node + '-' + path_array[index + 1] + ',+'
+    final_url = ''
+    unless path_array.size == (1 or 0)
+      path_array.each_index do |index|
+        final_url << "#{path_array[index]}-#{path_array[index+1]},+"
       end
+      final_url = final_url[0..-9]
     end
-    path_array[0..-3]
+    final_url
   end
 
 end

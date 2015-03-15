@@ -242,15 +242,26 @@ class Graph
     end
   end
 
-  # Finds a path between two nodes after having applied Dijkstra's algorithm.
+  # Finds a path array between two nodes after having applied Dijkstra's algorithm.
   #
   # @param [String] first_node
   # @param [String] second_node
   #
   # @return [Array<String>]
   #
-  def shortest_path_between(first_node, second_node)
+  def shortest_path_as_array(first_node, second_node)
     create_shortest_path(first_node, second_node, @short_paths[first_node]['prev'])
+  end
+
+  # Finds a path string between two nodes after having applied Dijkstra's algorithm.
+  #
+  # @param [String] first_node
+  # @param [String] second_node
+  #
+  # @return [String]
+  #
+  def shortest_path_as_string(first_node, second_node)
+    create_url_from_path(shortest_path_as_array(first_node, second_node))
   end
 
   private

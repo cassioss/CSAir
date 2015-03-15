@@ -14,13 +14,7 @@ class DijkstraTest < Test::Unit::TestCase
     @dijkstra_graph.add_connection('GHI', 'JKL', 20)
     @dijkstra_graph.add_connection('ABC', 'GHI', 50)  # Not the shortest path from 'ABC' to 'GHI'
     @dijkstra_graph.add_connection('ABC', 'JKL', 50)  # Shortest path from 'ABC' to 'JKL'
-
     @dijkstra_graph.evaluate_dijkstra
-
-    @path_to_abc = @dijkstra_graph.shortest_path_between('ABC', 'ABC')
-    @path_to_def = @dijkstra_graph.shortest_path_between('ABC', 'DEF')
-    @path_to_ghi = @dijkstra_graph.shortest_path_between('ABC', 'GHI')
-    @path_to_jkl = @dijkstra_graph.shortest_path_between('ABC', 'JKL')
   end
 
   # Tests the correct application of Dijkstra's algorithm in a graph.
@@ -55,11 +49,15 @@ class DijkstraTest < Test::Unit::TestCase
   # @return [void]
   #
   def test_dijkstra_path_nodes
+    path_to_abc = @dijkstra_graph.shortest_path_as_array('ABC', 'ABC')
+    path_to_def = @dijkstra_graph.shortest_path_as_array('ABC', 'DEF')
+    path_to_ghi = @dijkstra_graph.shortest_path_as_array('ABC', 'GHI')
+    path_to_jkl = @dijkstra_graph.shortest_path_as_array('ABC', 'JKL')
 
-    assert_equal(@path_to_abc, %w(ABC))
-    assert_equal(@path_to_def, %w(ABC DEF))
-    assert_equal(@path_to_ghi, %w(ABC DEF GHI))
-    assert_equal(@path_to_jkl, %w(ABC JKL))
+    assert_equal(path_to_abc, %w(ABC))
+    assert_equal(path_to_def, %w(ABC DEF))
+    assert_equal(path_to_ghi, %w(ABC DEF GHI))
+    assert_equal(path_to_jkl, %w(ABC JKL))
   end
 
   # Tests if the Dijkstra's path algorithm retrieves the correct URL for a path.
@@ -67,10 +65,10 @@ class DijkstraTest < Test::Unit::TestCase
   # @return [void]
   #
   def test_dijkstra_path_url
-    url_to_abc = @dijkstra_graph.create_url_from_path(@path_to_abc)
-    url_to_def = @dijkstra_graph.create_url_from_path(@path_to_def)
-    url_to_ghi = @dijkstra_graph.create_url_from_path(@path_to_ghi)
-    url_to_jkl = @dijkstra_graph.create_url_from_path(@path_to_jkl)
+    url_to_abc = @dijkstra_graph.shortest_path_as_string('ABC', 'ABC')
+    url_to_def = @dijkstra_graph.shortest_path_as_string('ABC', 'DEF')
+    url_to_ghi = @dijkstra_graph.shortest_path_as_string('ABC', 'GHI')
+    url_to_jkl = @dijkstra_graph.shortest_path_as_string('ABC', 'JKL')
 
     assert_equal(url_to_abc, '')
     assert_equal(url_to_def, 'ABC-DEF')
