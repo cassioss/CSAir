@@ -1,4 +1,4 @@
-require_relative 'reader'
+require_relative '../reader'
 require_relative 'connection'
 require_relative 'dijkstra'
 
