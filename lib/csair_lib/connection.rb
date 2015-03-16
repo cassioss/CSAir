@@ -6,6 +6,8 @@
 #
 class Connection
 
+  # Initializes a sorted set that keeps track of each connection.
+  #
   # @return [void]
   #
   def initialize
@@ -23,6 +25,8 @@ class Connection
     end
   end
 
+  # Gets the URL required to connect to the CSAir map.
+  #
   # @return [String]
   #
   def get_connection_url
@@ -33,7 +37,8 @@ class Connection
     url_string[0..-3]
   end
 
-  # Deletes an existing connection between two nodes. This is required when both ways of a connection are deleted.
+  # Deletes an existing connection between two nodes. This is required when both ways of
+  # a connection are deleted.
   #
   # @return [void]
   #
@@ -43,6 +48,8 @@ class Connection
 
   private
 
+  # Adds a dash between two uppercase words.
+  #
   # @param [String] two
   # @param [String] words
   #
@@ -52,6 +59,8 @@ class Connection
     two.upcase + '-' + words.upcase
   end
 
+  # Evaluates two words in terms of alphabetical order, having lowercase as reference.
+  #
   # @param [String] first
   # @param [String] second
   #
