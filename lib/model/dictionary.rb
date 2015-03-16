@@ -103,17 +103,4 @@ class Dictionary
     end
   end
 
-  private
-
-  # @param [Hash] airport
-  #
-  # @return [void]
-  #
-  def add_metro(airport)
-    add_translation(airport['name'], airport['code'])
-    @metros[airport['code']] = Metro.new(airport['name'], airport['country'], airport['continent'],
-                                         airport['timezone'], airport['population'],
-                                         airport['coordinates'], airport['region'])
-  end
-
 end

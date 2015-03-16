@@ -1,6 +1,6 @@
 require_relative 'reader'
 require_relative 'connection'
-require_relative '../utils/graph/dijkstra'
+require_relative 'dijkstra'
 
 # Class created to handle graph creation and reading for the CSAir flight network.
 #
