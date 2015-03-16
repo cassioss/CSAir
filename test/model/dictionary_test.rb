@@ -13,8 +13,8 @@ class DictionaryTest < Test::Unit::TestCase
   # @return [void]
   #
   def setup
-    @simple_graph = Dictionary.new
-    @simple_graph.add_translation('Lima', 'LIM')
+    @simple_dict = Dictionary.new
+    @simple_dict.add_translation('Lima', 'LIM')
   end
 
   # Tests a correct addition of a translation.
@@ -22,8 +22,8 @@ class DictionaryTest < Test::Unit::TestCase
   # @return [void]
   #
   def test_correct_translation
-    assert_equal(@simple_graph.encode('Lima'), 'LIM')
-    assert_equal(@simple_graph.unlock('LIM'), 'Lima')
+    assert_equal(@simple_dict.encode('Lima'), 'LIM')
+    assert_equal(@simple_dict.unlock('LIM'), 'Lima')
   end
 
   # Tests a correct deletion of a translation.
@@ -31,9 +31,9 @@ class DictionaryTest < Test::Unit::TestCase
   # @return [void]
   #
   def test_delete_translation
-    @simple_graph.delete_translation('Lima')
-    assert_nil(@simple_graph.encode('Lima'))
-    assert_nil(@simple_graph.unlock('LIM'))
+    @simple_dict.delete_translation('Lima')
+    assert_nil(@simple_dict.encode('Lima'))
+    assert_nil(@simple_dict.unlock('LIM'))
   end
 
   # Tests a correct change of an airport code in a given city.
@@ -41,10 +41,10 @@ class DictionaryTest < Test::Unit::TestCase
   # @return [void]
   #
   def test_change_airport_code
-    @simple_graph.change_airport_code('Lima', 'LMA')
-    assert_equal(@simple_graph.encode('Lima'), 'LMA')
-    assert_equal(@simple_graph.unlock('LMA'), 'Lima')
-    assert_nil(@simple_graph.unlock('LIM'))
+    @simple_dict.change_airport_code('Lima', 'LMA')
+    assert_equal(@simple_dict.encode('Lima'), 'LMA')
+    assert_equal(@simple_dict.unlock('LMA'), 'Lima')
+    assert_nil(@simple_dict.unlock('LIM'))
   end
 
   # Tests a correct change of a city name, but not its airport code.
@@ -52,10 +52,10 @@ class DictionaryTest < Test::Unit::TestCase
   # @return [void]
   #
   def test_change_city_name
-    @simple_graph.change_city_name('Lima', 'Limonada')
-    assert_equal(@simple_graph.encode('Limonada'), 'LIM')
-    assert_equal(@simple_graph.unlock('LIM'), 'Limonada')
-    assert_nil(@simple_graph.encode('Lima'))
+    @simple_dict.change_city_name('Lima', 'Limonada')
+    assert_equal(@simple_dict.encode('Limonada'), 'LIM')
+    assert_equal(@simple_dict.unlock('LIM'), 'Limonada')
+    assert_nil(@simple_dict.encode('Lima'))
   end
 
 end

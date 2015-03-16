@@ -1,5 +1,4 @@
 require 'test/unit'
-require_relative '../../lib/csair_lib/graph'
 require_relative '../../lib/csair_lib/connection'
 
 # Test unit created to test changes in connections.
@@ -12,7 +11,6 @@ class ConnectionTest < Test::Unit::TestCase
   # Called before every test method runs. Can be used
   # to set up fixture information.
   def setup
-    @simple_graph = Graph.new
     @simple_connectors = Connection.new
   end
 

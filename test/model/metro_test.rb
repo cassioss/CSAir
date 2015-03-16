@@ -1,7 +1,7 @@
 # encoding: utf-8
 
 require 'test/unit'
-require_relative '../../lib/csair_lib/metro'
+require_relative '../../lib/model/metro'
 
 # Test unit created to test changes in Metro attributes accordingly.
 #

@@ -1,6 +1,6 @@
-require_relative '../../lib/csair_lib/graph'
+require_relative '../../lib/model/graph'
 require_relative '../../lib/csair_lib/dictionary'
-require_relative '../../lib/csair_lib/metro'
+require_relative '../../lib/model/metro'
 
 # Class that aggregates all possible queries the user might want to make.
 #

@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative '../../../lib/csair_lib/graph'
+require_relative '../../../lib/model/graph'
 
 class DijkstraTest < Test::Unit::TestCase
 
