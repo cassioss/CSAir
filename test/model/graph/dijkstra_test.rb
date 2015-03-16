@@ -1,5 +1,5 @@
 require 'test/unit'
-require_relative '../../../lib/model/graph'
+require_relative '../../../lib/model/graph/graph'
 
 class DijkstraTest < Test::Unit::TestCase
 
